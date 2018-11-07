@@ -1,7 +1,7 @@
 {
-  "name": "babel-free-koa2-api-boilerplate",
-  "version": "3.0.0",
-  "description": "Koa2 boilerplate covering essentials for APIs, babel removed as a dependency",
+  "name": "consolidating-coinjoin",
+  "version": "1.0.0",
+  "description": "koa API server implementing Consolidating CoinJoin",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -24,12 +24,12 @@
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "apidoc": {
-    "title": "babel-free-koa2-api-boilerplate",
+    "title": "consolidating-coinjoin",
     "url": "localhost:5000"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/christroutner/babel-free-koa2-api-boilerplate"
+    "url": "https://github.com/christroutner/consolidating-coinjoin"
   },
   "dependencies": {
     "apidoc": "^0.16.1",
