@@ -32,7 +32,7 @@
     "url": "https://github.com/christroutner/consolidating-coinjoin"
   },
   "dependencies": {
-    "apidoc": "^0.16.1",
+    "apidoc": "^0.17.6",
     "bcryptjs": "^2.4.3",
     "glob": "^7.0.0",
     "jsonwebtoken": "^7.1.9",
