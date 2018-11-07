@@ -3,6 +3,7 @@ This is an API server forked from this [koa boilerplate](https://github.com/chri
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+[![Coverage Status](https://coveralls.io/repos/github/christroutner/consolidating-coinjoin/badge.svg?branch=master)](https://coveralls.io/github/christroutner/consolidating-coinjoin?branch=master)
 
 ## Requirements
 * node __^8.9.4__
