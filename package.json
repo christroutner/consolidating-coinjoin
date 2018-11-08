@@ -60,5 +60,13 @@
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "semantic-release": "^15.10.8"
+  },
+  "release": {
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": false
+      }
+    ]
   }
 }
