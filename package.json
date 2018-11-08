@@ -29,10 +29,7 @@
     "title": "consolidating-coinjoin",
     "url": "localhost:5000"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/christroutner/consolidating-coinjoin"
-  },
+  "repository": "christroutner/consolidating-coinjoin",
   "dependencies": {
     "apidoc": "^0.17.6",
     "bcryptjs": "^2.4.3",
