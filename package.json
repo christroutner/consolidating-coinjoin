@@ -37,7 +37,7 @@
     "apidoc": "^0.17.6",
     "bcryptjs": "^2.4.3",
     "glob": "^7.0.0",
-    "jsonwebtoken": "^7.1.9",
+    "jsonwebtoken": "^8.3.0",
     "kcors": "^2.2.1",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
