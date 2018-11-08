@@ -12,6 +12,9 @@ const cors = require('kcors')
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
 
+// Set the standarized BCH output of the CoinJoin
+process.env.STDOUT = 0.01
+
 async function startServer () {
   // Create a Koa instance.
   const app = new Koa()
@@ -42,7 +45,7 @@ async function startServer () {
   modules(app)
 
   // Enable CORS for testing
-  // app.use(cors({origin: '*'}))
+  app.use(cors({ origin: '*' }))
 
   // MIDDLEWARE END
 
