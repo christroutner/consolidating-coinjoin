@@ -15,6 +15,9 @@ const errorMiddleware = require('../src/middleware')
 // Set the standarized BCH output of the CoinJoin
 process.env.STDOUT = 0.01
 
+// Set the CoinJoin round.
+if !process.env.ROUND process.env.ROUND = 0
+
 async function startServer () {
   // Create a Koa instance.
   const app = new Koa()
