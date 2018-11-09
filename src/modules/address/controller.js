@@ -21,7 +21,7 @@ async function createParticipant (ctx) {
 
     // Input Validation
     if (!Array.isArray(outputAddrs)) return ctx.throw(422, `outputAddrs must be an array`)
-    if (!isNaN(parseFloat(amount))) return ctx.throw(422, `amount needs to be a number`)
+    if (isNaN(parseFloat(amount))) return ctx.throw(422, `amount needs to be a number`)
 
     // Create a new participant model.
     const participant = new Participant()
@@ -34,6 +34,7 @@ async function createParticipant (ctx) {
     // Generate the input addresses.
     const getAddress = new GetAddress()
     const inputAddrs = []
+    console.log(`filename: ${__filename}`)
     for (var i = 0; i < numInputs; i++) {
       const thisAddr = await getAddress.getAddress(`wallet`, BITBOX)
       inputAddrs.push(thisAddr)
@@ -43,25 +44,9 @@ async function createParticipant (ctx) {
     // Save the model.
 
     // Return the input addresses to the participant.
+    ctx.body = { inputAddrs }
   } catch (err) {
     ctx.throw(422, err.message)
-  }
-
-  const user = new Participant(ctx.request.body.user)
-  try {
-    await user.save()
-  } catch (err) {
-    ctx.throw(422, err.message)
-  }
-
-  const token = user.generateToken()
-  const response = user.toJSON()
-
-  delete response.password
-
-  ctx.body = {
-    user: response,
-    token
   }
 }
 

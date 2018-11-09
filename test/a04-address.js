@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const should = require('chai').should
 const utils = require('./utils')
 
@@ -12,27 +11,37 @@ const LOCALHOST = 'http://localhost:5000'
 
 should()
 
-describe('Standard BCH Output', () => {
+describe('Address', () => {
   before(async () => {
     utils.cleanDb()
   })
 
-  describe('GET /stdout', () => {
-    it('should fetch standardized BCH output', async () => {
+  describe('POST /address', () => {
+    it('should return input addresses', async () => {
+      const outAddrs = [
+        'bchtest:qr05vk3f4d2efnajvz7ns7wlz52atf5vgyhj8ydgug',
+        'bchtest:qpddsjjrrvsh5gu3eqxqrln4sgx58kaly576tc2xn9',
+        'bchtest:qpfmklaz53e23f04rnqkgl03x2hhgskkuukjfcea56'
+      ]
+      const numInputs = 2
+      const amount = 0.0123
+
       const options = {
-        method: 'GET',
-        uri: `${LOCALHOST}/stdout`,
+        method: 'POST',
+        uri: `${LOCALHOST}/address`,
         resolveWithFullResponse: true,
         json: true,
-        headers: {
-          Accept: 'application/json'
+        body: {
+          outAddrs,
+          numInputs,
+          amount
         }
       }
 
       const result = await rp(options)
-      // console.log(`result.body: ${util.inspect(result.body)}`)
+      console.log(`result.body: ${util.inspect(result.body)}`)
 
-      assert.hasAnyKeys(result.body, ['stdout'])
+      // assert.hasAnyKeys(result.body, ['stdout'])
     })
   })
 })
