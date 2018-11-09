@@ -17,6 +17,7 @@ const errorMiddleware = require('../src/middleware')
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
 const NETWORK = process.env.NETWORK
 
+// Instantiate BITBOX
 const BB = require('bitbox-sdk/lib/bitbox-sdk').default
 let BITBOX
 if (NETWORK === 'testnet') {
