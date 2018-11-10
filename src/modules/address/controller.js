@@ -34,9 +34,11 @@ async function createParticipant (ctx) {
     // Generate the input addresses.
     const getAddress = new GetAddress()
     const inputAddrs = []
-    console.log(`filename: ${__filename}`)
+    const filename = `${__dirname}/../../../wallets/wallet.json`
+    console.log(`filename: ${filename}`)
+
     for (var i = 0; i < numInputs; i++) {
-      const thisAddr = await getAddress.getAddress(`wallet`, BITBOX)
+      const thisAddr = await getAddress.getAddress(filename, BITBOX)
       inputAddrs.push(thisAddr)
       console.log(`inputAddrs[${i}] = ${thisAddr}`)
     }

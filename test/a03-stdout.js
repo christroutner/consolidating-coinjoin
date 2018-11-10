@@ -1,5 +1,4 @@
-const expect = require('chai').expect
-const should = require('chai').should
+
 const utils = require('./utils')
 
 const rp = require('request-promise')
@@ -9,8 +8,6 @@ const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
 const LOCALHOST = 'http://localhost:5000'
-
-should()
 
 describe('Standard BCH Output', () => {
   before(async () => {

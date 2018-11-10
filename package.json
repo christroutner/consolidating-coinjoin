@@ -32,7 +32,7 @@
   "repository": "christroutner/consolidating-coinjoin",
   "dependencies": {
     "apidoc": "^0.17.6",
-    "bch-cli-wallet": "^1.0.10",
+    "bch-cli-wallet": "^1.0.12",
     "bcryptjs": "^2.4.3",
     "glob": "^7.0.0",
     "jsonwebtoken": "^8.3.0",

@@ -33,10 +33,11 @@ if (!process.env.ROUND) process.env.ROUND = 0
 async function startServer () {
   // Create a new wallet.
   const createWallet = new CreateWallet()
+  const filename = `${__dirname}/../wallets/wallet.json`
   if (NETWORK === `testnet`) {
-    await createWallet.createWallet('wallet', BITBOX, true)
+    await createWallet.createWallet(filename, BITBOX, true)
   } else {
-    await createWallet.createWallet('wallet', BITBOX, false)
+    await createWallet.createWallet(filename, BITBOX, false)
   }
 
   // Create a Koa instance.
