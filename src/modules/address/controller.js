@@ -35,18 +35,19 @@ async function createParticipant (ctx) {
     const getAddress = new GetAddress()
     const inputAddrs = []
     const filename = `${__dirname}/../../../wallets/wallet.json`
-    console.log(`filename: ${filename}`)
 
     for (var i = 0; i < numInputs; i++) {
       const thisAddr = await getAddress.getAddress(filename, BITBOX)
       inputAddrs.push(thisAddr)
-      console.log(`inputAddrs[${i}] = ${thisAddr}`)
+      // console.log(`inputAddrs[${i}] = ${thisAddr}`)
     }
+    participant.inputAddrs = inputAddrs
 
     // Save the model.
+    await participant.save()
 
     // Return the input addresses to the participant.
-    ctx.body = { inputAddrs }
+    ctx.body = participant
   } catch (err) {
     ctx.throw(422, err.message)
   }

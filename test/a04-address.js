@@ -35,9 +35,26 @@ describe('Address', () => {
       }
 
       const result = await rp(options)
-      console.log(`result.body: ${util.inspect(result.body)}`)
+      // console.log(`result.body: ${util.inspect(result.body)}`)
 
-      // assert.hasAnyKeys(result.body, ['stdout'])
+      assert.hasAnyKeys(result.body, [
+        'inputAddrs',
+        'outputAddrs',
+        'txids',
+        '_id',
+        'round',
+        'satoshisReported'
+      ])
+
+      assert.isArray(result.body.inputAddrs)
+      assert.isArray(result.body.outputAddrs)
+      assert.isArray(result.body.txids)
+      assert.isNumber(result.body.round)
+      assert.isNumber(result.body.satoshisReported)
+
+      assert.equal(result.body.inputAddrs.length, 2)
+      assert.equal(result.body.outputAddrs.length, 3)
+      assert.equal(result.body.satoshisReported, 0.0123)
     })
   })
 })
