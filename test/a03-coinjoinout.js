@@ -14,11 +14,11 @@ describe('Standard BCH Output', () => {
     utils.cleanDb()
   })
 
-  describe('GET /stdout', () => {
-    it('should fetch standardized BCH output', async () => {
+  describe('GET /coinjoinout', () => {
+    it('should fetch standardized CoinJoin output', async () => {
       const options = {
         method: 'GET',
-        uri: `${LOCALHOST}/stdout`,
+        uri: `${LOCALHOST}/coinjoinout`,
         resolveWithFullResponse: true,
         json: true,
         headers: {
@@ -29,7 +29,7 @@ describe('Standard BCH Output', () => {
       const result = await rp(options)
       // console.log(`result.body: ${util.inspect(result.body)}`)
 
-      assert.hasAnyKeys(result.body, ['stdout'])
+      assert.hasAnyKeys(result.body, ['coinjoinout'])
     })
   })
 })

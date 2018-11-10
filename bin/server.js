@@ -25,7 +25,7 @@ if (NETWORK === 'testnet') {
 } else BITBOX = new BB({ restURL: 'https://rest.bitcoin.com/v1/' })
 
 // Set the standarized BCH output of the CoinJoin
-process.env.STDOUT = 0.01
+process.env.COINJOINOUT = 0.01
 
 // Set the CoinJoin round.
 if (!process.env.ROUND) process.env.ROUND = 0
