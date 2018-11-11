@@ -9,9 +9,12 @@ const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
+const checkBalance = require('../src/utils/check-balance')
 
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
+
+const CHECK_BALANCE_PERIOD = 1000 * 60 * 10 // 10 minutes
 
 // Determine the network. Testnet by default.
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
@@ -34,10 +37,11 @@ async function startServer () {
   // Create a new wallet.
   const createWallet = new CreateWallet()
   const filename = `${__dirname}/../wallets/wallet.json`
+  let walletInfo
   if (NETWORK === `testnet`) {
-    await createWallet.createWallet(filename, BITBOX, true)
+    walletInfo = await createWallet.createWallet(filename, BITBOX, true)
   } else {
-    await createWallet.createWallet(filename, BITBOX, false)
+    walletInfo = await createWallet.createWallet(filename, BITBOX, false)
   }
 
   // Create a Koa instance.
@@ -78,6 +82,11 @@ async function startServer () {
   // })
   await app.listen(config.port)
   console.log(`Server started on ${config.port}`)
+
+  // Periodically check the balance of server's wallet
+  setInterval(function () {
+    checkBalance.checkBalance(walletInfo, BITBOX)
+  }, CHECK_BALANCE_PERIOD)
 
   return app
 }
