@@ -35,7 +35,7 @@ describe('Address', () => {
       }
 
       const result = await rp(options)
-      console.log(`result.body: ${util.inspect(result.body)}`)
+      // console.log(`result.body: ${util.inspect(result.body)}`)
 
       assert.hasAnyKeys(result.body, [
         'inputAddrs',
