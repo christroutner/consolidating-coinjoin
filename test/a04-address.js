@@ -1,3 +1,11 @@
+/*
+
+TODO:
+
+*/
+
+'use strict'
+
 const utils = require('./utils')
 const rp = require('request-promise')
 const assert = require('chai').assert
@@ -13,6 +21,8 @@ describe('Address', () => {
   })
 
   describe('POST /address', () => {
+    let prevRound
+
     it('should return input addresses', async () => {
       const outAddrs = [
         'bchtest:qr05vk3f4d2efnajvz7ns7wlz52atf5vgyhj8ydgug',
@@ -55,6 +65,38 @@ describe('Address', () => {
       assert.equal(result.body.inputAddrs.length, 2)
       assert.equal(result.body.outputAddrs.length, 3)
       assert.equal(result.body.satoshisReported, 0.0123)
+
+      prevRound = result.body.round
+    })
+
+    it('should change round when process.env.ROUND changes', async () => {
+      const outAddrs = [
+        'bchtest:qr05vk3f4d2efnajvz7ns7wlz52atf5vgyhj8ydgug',
+        'bchtest:qpddsjjrrvsh5gu3eqxqrln4sgx58kaly576tc2xn9',
+        'bchtest:qpfmklaz53e23f04rnqkgl03x2hhgskkuukjfcea56'
+      ]
+      const numInputs = 2
+      const amount = 0.0123
+
+      // Increment the global ROUND env var.
+      process.env.ROUND = prevRound + 1
+
+      const options = {
+        method: 'POST',
+        uri: `${LOCALHOST}/address`,
+        resolveWithFullResponse: true,
+        json: true,
+        body: {
+          outAddrs,
+          numInputs,
+          amount
+        }
+      }
+
+      const result = await rp(options)
+      // console.log(`result.body: ${util.inspect(result.body)}`)
+
+      assert.equal(result.body.round, prevRound + 1)
     })
   })
 })
