@@ -3,10 +3,10 @@
   output values of BCH, which is at the heart of a successful CoinJoin.
 */
 
-async function getStdOut (ctx) {
-  ctx.body = { stdout: process.env.STDOUT }
+async function getCoinJoinOut (ctx) {
+  ctx.body = { coinjoinout: process.env.COINJOINOUT }
 }
 
 module.exports = {
-  getStdOut
+  getCoinJoinOut
 }

@@ -8,14 +8,38 @@ const passport = require('koa-passport')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
+const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
 
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
 
+// Determine the network. Testnet by default.
+if (!process.env.NETWORK) process.env.NETWORK = `testnet`
+const NETWORK = process.env.NETWORK
+
+// Instantiate BITBOX
+const BB = require('bitbox-sdk/lib/bitbox-sdk').default
+let BITBOX
+if (NETWORK === 'testnet') {
+  BITBOX = new BB({ restURL: 'https://trest.bitcoin.com/v1/' })
+} else BITBOX = new BB({ restURL: 'https://rest.bitcoin.com/v1/' })
+
 // Set the standarized BCH output of the CoinJoin
-process.env.STDOUT = 0.01
+process.env.COINJOINOUT = 0.01
+
+// Set the CoinJoin round.
+if (!process.env.ROUND) process.env.ROUND = 0
 
 async function startServer () {
+  // Create a new wallet.
+  const createWallet = new CreateWallet()
+  const filename = `${__dirname}/../wallets/wallet.json`
+  if (NETWORK === `testnet`) {
+    await createWallet.createWallet(filename, BITBOX, true)
+  } else {
+    await createWallet.createWallet(filename, BITBOX, false)
+  }
+
   // Create a Koa instance.
   const app = new Koa()
   app.keys = [config.session]
