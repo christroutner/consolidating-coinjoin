@@ -8,8 +8,11 @@ const passport = require('koa-passport')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
-const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
 const checkBalance = require('../src/utils/check-balance')
+
+// Wallet functionality
+const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
+const UpdateBalance = require('bch-cli-wallet/src/commands/update-balances')
 
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
@@ -85,7 +88,8 @@ async function startServer () {
 
   // Periodically check the balance of server's wallet
   setInterval(function () {
-    checkBalance.checkBalance(walletInfo, BITBOX)
+    const updateBalance = new UpdateBalance()
+    checkBalance.checkBalance(walletInfo, BITBOX, updateBalance)
   }, CHECK_BALANCE_PERIOD)
 
   return app
