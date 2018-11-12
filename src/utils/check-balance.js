@@ -18,8 +18,8 @@ util.inspect.defaultOptions = { depth: 1 }
 
 module.exports = {
   checkBalance, // Check the balance of the wallet.
-  swapWallet,
-  deleteWallet
+  swapWallet, // Rename the current wallet and swap it out with a new one.
+  deleteWallet // Delete the wallet and DB entries to clean up.
 }
 
 // Query the balance of the wallet and update the wallet file.
@@ -34,6 +34,10 @@ async function checkBalance (walletInfo, BITBOX, updateBalance) {
 
     if (balance >= THRESHOLD) {
       console.log(`Threshold of ${THRESHOLD} BCH reached! Current balance: ${balance}`)
+
+      // Swap out existing wallet and increase the ROUND.
+
+      // Execute the 'TX N+1' part of the Consolidating CoinJoin
     } else {
       console.log(`Current balance of ${balance} has not reached the threshold of ${THRESHOLD} BCH`)
     }
