@@ -5,12 +5,15 @@
 
 'use strict'
 
+const Participant = require('../models/participant')
+
 // Wallet functionality
 const SendAll = require('bch-cli-wallet/src/commands/send-all')
 const appUtil = require(`bch-cli-wallet/src/util`)
 
 module.exports = {
-  consolidateUTXOs
+  consolidateUTXOs, // TX N+1
+  distributeFunds // TX N+2
 }
 
 // Consolidate all UTXOs into a single address.
@@ -27,6 +30,19 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
     return txid
   } catch (err) {
     console.log(`Error in ccoinjoin.js/consolidateUTXOS()`)
+    throw err
+  }
+}
+
+// Distribute the consolidated funds to participants output addresses.
+// This is 'TX N+2'
+async function distributeFunds (walletInfo, BITBOX, round) {
+  try {
+    // Retrieve all participants in the database.
+    const participants = await Participant.find({})
+    console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
+  } catch (err) {
+    console.log(`Error in ccoinjoin.js/distributeFunds()`)
     throw err
   }
 }
