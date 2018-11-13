@@ -9,7 +9,7 @@ TODO:
 const utils = require('./utils')
 // const rp = require('request-promise')
 const assert = require('chai').assert
-const checkBalance = require('../src/utils/check-balance')
+const checkBalance = require('../../src/utils/check-balance')
 const sinon = require('sinon')
 const shelljs = require('shelljs')
 
@@ -51,7 +51,7 @@ describe('Check Balance Utilities', () => {
     it('should swap out the wallet file.', async () => {
       await checkBalance.swapWallet(BITBOX)
 
-      const afterFileList = shelljs.ls(`${__dirname}/../wallets/`)
+      const afterFileList = shelljs.ls(`${__dirname}/../../wallets/`)
 
       // Assert that the file exists in the directory.
       assert.equal(afterFileList.indexOf(`active-wallet.json`) > -1, true)
@@ -60,7 +60,7 @@ describe('Check Balance Utilities', () => {
     it('should delete the active wallet file', async () => {
       await checkBalance.deleteWallet()
 
-      const afterFileList = shelljs.ls(`${__dirname}/../wallets/`)
+      const afterFileList = shelljs.ls(`${__dirname}/../../wallets/`)
 
       // Assert that the active wallet has been deleted.
       assert.equal(afterFileList.indexOf(`active-wallet.json`) === -1, true)

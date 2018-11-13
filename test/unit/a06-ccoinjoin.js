@@ -9,14 +9,14 @@ TODO:
 const utils = require('./utils')
 // const rp = require('request-promise')
 const assert = require('chai').assert
-const checkBalance = require('../src/utils/check-balance')
-const sinon = require('sinon')
-const shelljs = require('shelljs')
-const ccoinjoin = require(`../src/utils/ccoinjoin`)
+// const checkBalance = require('../src/utils/check-balance')
+// const sinon = require('sinon')
+// const shelljs = require('shelljs')
+const ccoinjoin = require(`../../src/utils/ccoinjoin`)
 
 const { bitboxMock } = require('./mocks/bitbox')
 const exampleWallet = require('./mocks/testwallet.json')
-const Participant = require('../src/models/participant')
+const Participant = require('../../src/models/participant')
 
 const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
