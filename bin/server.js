@@ -17,7 +17,7 @@ const UpdateBalance = require('bch-cli-wallet/src/commands/update-balances')
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
 
-const CHECK_BALANCE_PERIOD = 1000 * 60 * 10 // 10 minutes
+const CHECK_BALANCE_PERIOD = 1000 * 60 * 2 // 2 minutes
 
 // Determine the network. Testnet by default.
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
@@ -55,6 +55,13 @@ async function startServer () {
   mongoose.Promise = global.Promise
   await mongoose.connect(config.database, { useNewUrlParser: true })
   mongoose.set('useCreateIndex', true) // Stop deprecation warning.
+
+  // Wipe the database on startup.
+  for (const collection in mongoose.connection.collections) {
+    if (mongoose.connection.collections.hasOwnProperty(collection)) {
+      mongoose.connection.collections[collection].deleteMany()
+    }
+  }
 
   // MIDDLEWARE START
 
