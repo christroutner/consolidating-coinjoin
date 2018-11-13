@@ -64,16 +64,22 @@ describe('Consolidated CoinJoin', () => {
     })
   })
 
-  describe('distributeFunds()', () => {
-    it('should distribute funds to particpants', async () => {
+  describe('getParticipantOutputs()', () => {
+    it('should generate an array of participants recieving output BCH', async () => {
       // Mock participants in DB.
       await mockParticipants()
 
       // Mock the rootAddress UTXO
 
       const round = 0
-      const result = await ccoinjoin.distributeFunds(mockedWallet, BITBOX, round)
-      console.log(`result: ${util.inspect(result)}`)
+      const result = await ccoinjoin.getParticipantOutputs(round)
+      // console.log(`result: ${util.inspect(result)}`)
+
+      assert.isArray(result)
+      assert.hasAnyKeys(result[0], [
+        'addr',
+        'amountSat'
+      ])
     })
   })
 })

@@ -16,6 +16,7 @@ util.inspect.defaultOptions = { depth: 1 }
 
 module.exports = {
   consolidateUTXOs, // TX N+1
+  getParticipantOutputs, // Generate a list of outputs
   distributeFunds // TX N+2
 }
 
@@ -37,9 +38,9 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
   }
 }
 
-// Distribute the consolidated funds to participants output addresses.
-// This is 'TX N+2'
-async function distributeFunds (walletInfo, BITBOX, round) {
+// Create an array of output addresses and amounts to send, in preparation of
+// executing 'TX N+2'
+async function getParticipantOutputs (round) {
   try {
     const coinjoinoutSat = process.env.COINJOINOUT * 100000000
 
@@ -101,4 +102,10 @@ async function distributeFunds (walletInfo, BITBOX, round) {
     console.log(`Error in ccoinjoin.js/distributeFunds()`)
     throw err
   }
+}
+
+// Distribute the consolidated funds to participants output addresses.
+// This is 'TX N+2'
+async function distributeFunds (walletInfo, BITBOX, outAddrs) {
+
 }
