@@ -42,7 +42,9 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
 // executing 'TX N+2'
 async function getParticipantOutputs (round) {
   try {
-    const coinjoinoutSat = process.env.COINJOINOUT * 100000000
+    const coinjoinoutSat = Number(process.env.COINJOINOUT) * 100000000
+
+    if (!coinjoinoutSat || coinjoinoutSat <= 0) throw new Error(`COINJOINOUT env var not set`)
 
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
@@ -53,6 +55,7 @@ async function getParticipantOutputs (round) {
     // Loop through each participant in the DB.
     for (var i = 0; i < participants.length; i++) {
       const thisParticipant = participants[i]
+      // console.log(`thisParticipant: ${util.inspect(thisParticipant)}`)
 
       // Only process particpants of the current round.
       if (thisParticipant.round === round) {
@@ -61,9 +64,10 @@ async function getParticipantOutputs (round) {
         // Loop through each output address for this participant.
         for (var j = 0; j < thisParticipant.outputAddrs.length; j++) {
           const thisAddr = thisParticipant.outputAddrs[j]
+          // console.log(`thisAddr: ${util.inspect(thisAddr)}`)
 
           // If the next output address doesn't exist, exit the loop.
-          if (!thisAddr || thisAddr === '') break
+          if (!thisAddr || thisAddr === '') continue
 
           // Normal case. Send the standard CoinJoin output and subtract that from the remainder.
           if (remainder > coinjoinoutSat) {
@@ -152,15 +156,21 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       { P2PKH: 1 },
       { P2PKH: outAddrs.length }
     )
-    console.log(`fee: ${byteCount}`)
+    const fee = Math.ceil(byteCount * 1.1)
+    console.log(`fee: ${fee}`)
 
     // amount to send to receiver. It's the original amount - 1 sat/byte for tx size
-    const sendAmount = originalAmount - byteCount
+    const sendAmount = originalAmount - fee
     console.log(`sendAmount: ${sendAmount}`)
 
     // Loop through the output addresses
     for (var i = 0; i < outAddrs.length; i++) {
       const thisOutAddr = outAddrs[i]
+
+      // For now, the fee gets subtracted from the first output.
+      if (i === 0) {
+        thisOutAddr.amountSat -= fee
+      }
 
       // add output w/ address and amount to send
       transactionBuilder.addOutput(thisOutAddr.addr, thisOutAddr.amountSat)
@@ -183,13 +193,15 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
     const tx = transactionBuilder.build()
     // output rawhex
     const hex = tx.toHex()
+    return hex
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex)
+    // const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex)
     // console.log(`\nTransaction ID: ${broadcast}`)
 
-    return broadcast
+    // return broadcast
   } catch (err) {
     console.log(`Error in ccoinjoin.js/distributeFunds()`)
+    throw err
   }
 }

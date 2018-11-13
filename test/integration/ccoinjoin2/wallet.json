@@ -1,0 +1,18 @@
+{
+  "network": "testnet",
+  "mnemonic": "ancient patrol intact immune bargain theme million receive song mansion bid cancel denial property paddle crawl panda student vendor weird wink grow cup scatter",
+  "rootAddress": "bchtest:qrz36375mq0s22wnxcvtdxun4dzjm0fdzg30668d60",
+  "balance": 0.06698719,
+  "nextAddress": 17,
+  "hasBalance": [
+    {
+      "index": 0,
+      "balance": 0.06698719,
+      "balanceSat": 6698719,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qrz36375mq0s22wnxcvtdxun4dzjm0fdzg30668d60"
+    }
+  ],
+  "name": "wallet"
+}
