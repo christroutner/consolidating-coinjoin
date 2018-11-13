@@ -99,7 +99,7 @@ async function getParticipantOutputs (round) {
 
     return outputAddrs
   } catch (err) {
-    console.log(`Error in ccoinjoin.js/distributeFunds()`)
+    console.log(`Error in ccoinjoin.js/getParticipantOutputs()`)
     throw err
   }
 }
@@ -107,5 +107,89 @@ async function getParticipantOutputs (round) {
 // Distribute the consolidated funds to participants output addresses.
 // This is 'TX N+2'
 async function distributeFunds (walletInfo, BITBOX, outAddrs) {
+  try {
+    const mnemonic = walletInfo.mnemonic
 
+    // root seed buffer
+    const rootSeed = BITBOX.Mnemonic.toSeed(mnemonic)
+
+    // master HDNode
+    let masterHDNode
+    if (walletInfo.network === `testnet`) {
+      masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, 'testnet') // Testnet
+    } else masterHDNode = BITBOX.HDNode.fromSeed(rootSeed)
+
+    // HDNode of BIP44 account
+    const account = BITBOX.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
+
+    const change = BITBOX.HDNode.derivePath(account, '0/0')
+
+    // get the cash address
+    const cashAddress = BITBOX.HDNode.toCashAddress(change)
+    // const cashAddress = walletInfo.cashAddress
+
+    // instance of transaction builder
+    let transactionBuilder
+    if (walletInfo.network === `testnet`) {
+      transactionBuilder = new BITBOX.TransactionBuilder('testnet')
+    } else transactionBuilder = new BITBOX.TransactionBuilder()
+
+    // Combine all the utxos into the inputs of the TX.
+    const u = await BITBOX.Address.utxo([cashAddress])
+    const utxo = u[0][0] // Only one utxo.
+    // console.log(`utxo: ${util.inspect(utxo)}`)
+
+    transactionBuilder.addInput(utxo.txid, utxo.vout)
+
+    let originalAmount = utxo.satoshis
+
+    // original amount of satoshis in vin
+    // const originalAmount = inputs.length * dust
+    console.log(`originalAmount: ${originalAmount}`)
+
+    // get byte count to calculate fee. paying 1 sat/byte
+    const byteCount = BITBOX.BitcoinCash.getByteCount(
+      { P2PKH: 1 },
+      { P2PKH: outAddrs.length }
+    )
+    console.log(`fee: ${byteCount}`)
+
+    // amount to send to receiver. It's the original amount - 1 sat/byte for tx size
+    const sendAmount = originalAmount - byteCount
+    console.log(`sendAmount: ${sendAmount}`)
+
+    // Loop through the output addresses
+    for (var i = 0; i < outAddrs.length; i++) {
+      const thisOutAddr = outAddrs[i]
+
+      // add output w/ address and amount to send
+      transactionBuilder.addOutput(thisOutAddr.addr, thisOutAddr.amountSat)
+    }
+
+    // keypair
+    const keyPair = BITBOX.HDNode.toKeyPair(change)
+
+    // sign w/ HDNode
+    let redeemScript
+    transactionBuilder.sign(
+      0,
+      keyPair,
+      redeemScript,
+      transactionBuilder.hashTypes.SIGHASH_ALL,
+      utxo.satoshis
+    )
+
+    // build tx
+    const tx = transactionBuilder.build()
+    // output rawhex
+    const hex = tx.toHex()
+
+    // sendRawTransaction to running BCH node
+    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex)
+    // console.log(`\nTransaction ID: ${broadcast}`)
+
+    return broadcast
+  } catch (err) {
+    console.log(`Error in ccoinjoin.js/distributeFunds()`)
+  }
 }

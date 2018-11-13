@@ -40,20 +40,20 @@ describe('Consolidated CoinJoin', () => {
     it('should consolidate UTXOs and return a TX ID', async () => {
       mockedWallet.hasBalance = [
         {
-          'index': 2,
-          'balance': 0.03,
-          'balanceSat': 3000000,
-          'unconfirmedBalance': 0,
-          'unconfirmedBalanceSat': 0,
-          'cashAddress': 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8fm'
+          index: 2,
+          balance: 0.03,
+          balanceSat: 3000000,
+          unconfirmedBalance: 0,
+          unconfirmedBalanceSat: 0,
+          cashAddress: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8fm'
         },
         {
-          'index': 3,
-          'balance': 0.06999752,
-          'balanceSat': 6999752,
-          'unconfirmedBalance': 0,
-          'unconfirmedBalanceSat': 0,
-          'cashAddress': 'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3'
+          index: 3,
+          balance: 0.06999752,
+          balanceSat: 6999752,
+          unconfirmedBalance: 0,
+          unconfirmedBalanceSat: 0,
+          cashAddress: 'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3'
         }
       ]
 
@@ -76,20 +76,72 @@ describe('Consolidated CoinJoin', () => {
       // console.log(`result: ${util.inspect(result)}`)
 
       assert.isArray(result)
-      assert.hasAnyKeys(result[0], [
-        'addr',
-        'amountSat'
-      ])
+      assert.hasAnyKeys(result[0], ['addr', 'amountSat'])
+    })
+  })
+
+  describe('distributeFunds', () => {
+    it('Sends funds to participants', async () => {
+      const outAddrs = mockAddrs()
+
+      const result = await ccoinjoin.distributeFunds(mockedWallet, BITBOX, outAddrs)
+      // console.log(`result: ${util.inspect(result)}`)
+
+      assert.isString(result)
     })
   })
 })
+
+function mockAddrs () {
+  return [
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f1',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f2',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f3',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f4',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f5',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f6',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f7',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f8',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f9',
+      amountSat: 1000000
+    },
+    {
+      addr: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h810',
+      amountSat: 1000000
+    }
+  ]
+}
 
 async function mockParticipants () {
   const participant1 = new Participant()
   participant1.round = 0
   participant1.inputAddrs = [
     'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3'
-
   ]
   participant1.outputAddrs = [
     'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f1',
@@ -106,7 +158,6 @@ async function mockParticipants () {
   participant2.round = 0
   participant2.inputAddrs = [
     'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3'
-
   ]
   participant2.outputAddrs = [
     'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8f6',
