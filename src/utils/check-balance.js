@@ -71,6 +71,7 @@ async function checkBalance (BITBOX, updateBalance) {
   }
 }
 
+// TODO Needs unit test.
 // Update the participants satoshisReceived
 async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
   // Dev Assumption: There is only 1 UTXO in the address. This should be valid
@@ -87,7 +88,7 @@ async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
     const inAddrs = thisParticipant.inputAddrs
 
     // Initialize the satoshisReceived property if it's not already.
-    if (!thisParticipant.satoshisReceived) thisParticipant.satoshisReceived = 0
+    thisParticipant.satoshisReceived = 0
 
     console.log(`this participant: ${util.inspect(thisParticipant)}`)
 
@@ -95,7 +96,7 @@ async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
     if (thisParticipant.round === round) {
       // Loop through each input address.
       for (var j = 0; j < inAddrs.length; j++) {
-        const thisAddr = inAddrs[i]
+        const thisAddr = inAddrs[j]
 
         // Query the balance of that address.
         const thisAddrDetails = await BITBOX.Address.details([thisAddr])
@@ -150,8 +151,15 @@ async function monitorTx (txid, round, walletInfo, BITBOX) {
   // Get a list of addresses and amounts to send to the participants.
   const outAddrs = await ccoinjoin.getParticipantOutputs(round)
 
+  // Might want to run an updateBalance call here. Since walletInfo.balaance = utxo - fee
+
   // Distribute the funds.
-  const txid2 = await ccoinjoin.distributeFunds(walletInfo, BITBOX, outAddrs)
+  const hex = await ccoinjoin.distributeFunds(walletInfo, BITBOX, outAddrs)
+  console.log(`Transaction hex: ${hex}`)
+
+  // sendRawTransaction to running BCH node
+  const txid2 = await BITBOX.RawTransactions.sendRawTransaction(hex)
+
   console.log(`Funds distributed to participants. TXID: ${txid2}`)
 }
 

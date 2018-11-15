@@ -12,7 +12,7 @@ const SendAll = require('bch-cli-wallet/src/commands/send-all')
 const appUtil = require(`bch-cli-wallet/src/util`)
 
 const util = require('util')
-util.inspect.defaultOptions = { depth: 1 }
+util.inspect.defaultOptions = { depth: 3 }
 
 module.exports = {
   consolidateUTXOs, // TX N+1
@@ -192,6 +192,8 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       transactionBuilder.hashTypes.SIGHASH_ALL,
       utxo.satoshis
     )
+
+    console.log(`transactionBuilder: ${util.inspect(transactionBuilder)}`)
 
     // build tx
     const tx = transactionBuilder.build()
