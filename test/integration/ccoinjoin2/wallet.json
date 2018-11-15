@@ -1,18 +1,41 @@
 {
   "network": "testnet",
-  "mnemonic": "ancient patrol intact immune bargain theme million receive song mansion bid cancel denial property paddle crawl panda student vendor weird wink grow cup scatter",
-  "rootAddress": "bchtest:qrz36375mq0s22wnxcvtdxun4dzjm0fdzg30668d60",
-  "balance": 0.06698719,
-  "nextAddress": 17,
+  "mnemonic": "height tonight gap spawn sand bless original jaguar trap cram plug fiscal try fringe uniform alley embark betray beach bounce toward never huge injury",
+  "rootAddress": "bchtest:qptycuuqwh9473px94fxj8jql7f7k0s3suevn7gca7",
+  "balance": 0.13269156,
+  "nextAddress": 5,
   "hasBalance": [
     {
-      "index": 0,
-      "balance": 0.06698719,
-      "balanceSat": 6698719,
+      "index": 1,
+      "balance": 0.05319789,
+      "balanceSat": 5319789,
       "unconfirmedBalance": 0,
       "unconfirmedBalanceSat": 0,
-      "cashAddress": "bchtest:qrz36375mq0s22wnxcvtdxun4dzjm0fdzg30668d60"
+      "cashAddress": "bchtest:qr77t29tpqyvdwydsrcl8jyf73f4yv5mzqjkwq2fr7"
+    },
+    {
+      "index": 2,
+      "balance": 0.01299789,
+      "balanceSat": 1299789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qr7mch8wkmc59gdjcvuuugean84esl9p3szfp6nktm"
+    },
+    {
+      "index": 3,
+      "balance": 0.05549789,
+      "balanceSat": 5549789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qqawytmxmettzhjpm58hsz9e4wtth64pfyc4jxlclf"
+    },
+    {
+      "index": 4,
+      "balance": 0.01099789,
+      "balanceSat": 1099789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qp4jdz4msv8vl54htr0dlty75shfzr2lzcs7dlvsez"
     }
-  ],
-  "name": "wallet"
+  ]
 }

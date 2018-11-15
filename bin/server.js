@@ -96,7 +96,7 @@ async function startServer () {
   // Periodically check the balance of server's wallet
   setInterval(function () {
     const updateBalance = new UpdateBalance()
-    checkBalance.checkBalance(walletInfo, BITBOX, updateBalance)
+    checkBalance.checkBalance(BITBOX, updateBalance)
   }, CHECK_BALANCE_PERIOD)
 
   return app

@@ -9,6 +9,7 @@ const ccoinjoin = require('./ccoinjoin')
 
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
+const appUtil = require('bch-cli-wallet/src/util')
 
 const FILENAME = `${__dirname}/../../wallets/wallet.json`
 const ACTIVE_WALLET = `${__dirname}/../../wallets/active-wallet.json`
@@ -24,8 +25,11 @@ module.exports = {
 }
 
 // Query the balance of the wallet and update the wallet file.
-async function checkBalance (walletInfo, BITBOX, updateBalance) {
+async function checkBalance (BITBOX, updateBalance) {
   try {
+    const filename = `${__dirname}/../../wallets/wallet.json`
+    let walletInfo = await appUtil.openWallet(filename)
+
     const newWalletInfo = await updateBalance.updateBalances(FILENAME, walletInfo, BITBOX)
 
     // console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
@@ -34,23 +38,23 @@ async function checkBalance (walletInfo, BITBOX, updateBalance) {
     const balance = newWalletInfo.balance
 
     if (balance >= THRESHOLD) {
-      console.log(`Threshold of ${THRESHOLD} BCH reached! Current balance: ${balance}`)
-
       // Save the current round.
       const round = Number(process.env.ROUND)
+
+      console.log(`Threshold of ${THRESHOLD} BCH reached for round ${round}! Current balance: ${balance}`)
 
       // Swap out existing wallet and increase the ROUND.
       // const newWallet = await swapWallet(BITBOX)
       await swapWallet(BITBOX)
 
       // Execute the 'TX N+1' part of the Consolidating CoinJoin
-      const txid = await ccoinjoin.consolidateUTXOs(walletInfo, BITBOX)
+      const txid = await ccoinjoin.consolidateUTXOs(newWalletInfo, BITBOX)
       console.log(`Participant funds consolidated. TXID: ${txid}`)
 
       // Montior the TX and kick off the TX N+2 part of the Consolidation CoinJoin
       // after 1 confirmation.
       // Note: no await is used because we don't want this function to wait on it.
-      monitorTx(txid, round, walletInfo, BITBOX)
+      monitorTx(txid, round, newWalletInfo, BITBOX)
     } else {
       console.log(`Current balance of ${balance} has not reached the threshold of ${THRESHOLD} BCH`)
     }
@@ -69,6 +73,7 @@ async function swapWallet (BITBOX) {
 
   // Update the ROUND.
   process.env.ROUND = Number(process.env.ROUND) + 1
+  console.log(`Starting round ${process.env.ROUND}`)
 
   // Create a new wallet.
   const createWallet = new CreateWallet()
@@ -108,9 +113,10 @@ async function waitFor1Conf (txid, BITBOX) {
   const PERIOD = 1000 * 30 // 30 seconds
 
   let confirms = 0
+  const txidMin = txid.slice(-6)
 
   while (confirms < 1) {
-    console.log(`Checking for confirmation...`)
+    console.log(`Checking TX ${txidMin} for confirmation...`)
 
     confirms = await getTxInfo(txid, BITBOX)
 
@@ -123,10 +129,16 @@ async function waitFor1Conf (txid, BITBOX) {
 
 // Get Token info from the TX.
 async function getTxInfo (txid, BITBOX) {
-  // const retVal = await BITBOX.DataRetrieval.transaction(txid)
-  const txInfo = await BITBOX.Transaction.details(txid)
-  // console.log(`Info from TXID ${txid}: ${JSON.stringify(retVal, null, 2)}`)
-  return txInfo.confirmations
+  try {
+    // const retVal = await BITBOX.DataRetrieval.transaction(txid)
+    const txInfo = await BITBOX.Transaction.details(txid)
+    // console.log(`Info from TXID ${txid}: ${JSON.stringify(retVal, null, 2)}`)
+    return txInfo.confirmations
+  } catch (err) {
+    // Catch network errors and try again.
+    console.log(`Error in getTxInfo():`, err)
+    return 0
+  }
 }
 
 // Promise-based sleep function.

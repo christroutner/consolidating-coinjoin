@@ -10,7 +10,7 @@
 
 'use strict'
 
-process.env.NODE_ENV = 'test'
+// process.env.NODE_ENV = 'test'
 process.env.COINJOINOUT = 0.01
 
 const mongoose = require('mongoose')
@@ -43,10 +43,10 @@ async function runTest () {
     mongoose.set('useCreateIndex', true) // Stop deprecation warning.
 
     // Wipe the test DB.
-    utils.cleanDb()
+    // utils.cleanDb()
 
     // Created artificial participants.
-    await mockParticipants()
+    // await mockParticipants()
 
     // Generate a list of output addresses and
     const outAddrs = await ccoinjoin.getParticipantOutputs(0)
@@ -57,8 +57,8 @@ async function runTest () {
     console.log(`hex: ${hex}`)
 
     // sendRawTransaction to running BCH node
-    const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex)
-    console.log(`\nTransaction ID: ${broadcast}`)
+    // const broadcast = await BITBOX.RawTransactions.sendRawTransaction(hex)
+    // console.log(`\nTransaction ID: ${broadcast}`)
 
     mongoose.connection.close()
   } catch (err) {

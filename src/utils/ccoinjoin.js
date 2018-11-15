@@ -42,13 +42,15 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
 // executing 'TX N+2'
 async function getParticipantOutputs (round) {
   try {
+    console.log(`Getting participants for round ${round}.`)
     const coinjoinoutSat = Number(process.env.COINJOINOUT) * 100000000
 
     if (!coinjoinoutSat || coinjoinoutSat <= 0) throw new Error(`COINJOINOUT env var not set`)
 
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
-    // console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
+    console.log(`${participants.length} participants in round ${round}`)
+    console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
 
     const outputAddrs = []
 
@@ -64,7 +66,8 @@ async function getParticipantOutputs (round) {
         // Loop through each output address for this participant.
         for (var j = 0; j < thisParticipant.outputAddrs.length; j++) {
           const thisAddr = thisParticipant.outputAddrs[j]
-          // console.log(`thisAddr: ${util.inspect(thisAddr)}`)
+          console.log(`thisAddr: ${util.inspect(thisAddr)}`)
+          console.log(`remainder: ${remainder}`)
 
           // If the next output address doesn't exist, exit the loop.
           if (!thisAddr || thisAddr === '') continue
@@ -112,6 +115,7 @@ async function getParticipantOutputs (round) {
 // This is 'TX N+2'
 async function distributeFunds (walletInfo, BITBOX, outAddrs) {
   try {
+    console.log(`Distributing ${walletInfo.balance} BCH to ${outAddrs.length} addresses.`)
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
