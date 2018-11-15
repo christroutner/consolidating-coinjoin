@@ -1,7 +1,7 @@
 /*
 
 TODO:
-
+ -- Rejects if satoshisReported is not an integer
 */
 
 'use strict'

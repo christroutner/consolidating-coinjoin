@@ -1,0 +1,27 @@
+{
+  "network": "testnet",
+  "mnemonic": "work design achieve affair dove hand crunch once race year perfect wolf march neutral parent intact hold bamboo sort voyage soccer cash prize lake",
+  "rootAddress": "bchtest:qpw9th7yycgwg8mfngt8dm4mexdx5858hgzwe34t3l",
+  "balance": 0.10778582,
+  "nextAddress": 6,
+  "hasBalance": [
+    {
+      "index": 4,
+      "balance": 0.03209999,
+      "balanceSat": 3209999,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qr4t40e2urfvdctvml3z4jagmahn0at2duh8amzdlw"
+    },
+    {
+      "index": 5,
+      "balance": 0.07568583,
+      "balanceSat": 7568583,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qzp45qytegzv0efd6urfrmvgue5dr0meyc49gr3gkw"
+    }
+  ],
+  "name": "demo03"
+}
+

@@ -6,6 +6,7 @@
 
 const shelljs = require('shelljs')
 const ccoinjoin = require('./ccoinjoin')
+const Participant = require('../models/participant')
 
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
@@ -21,7 +22,8 @@ util.inspect.defaultOptions = { depth: 1 }
 module.exports = {
   checkBalance, // Check the balance of the wallet.
   swapWallet, // Rename the current wallet and swap it out with a new one.
-  deleteWallet // Delete the wallet and DB entries to clean up.
+  deleteWallet, // Delete the wallet and DB entries to clean up.
+  validateSatoshisRecieved
 }
 
 // Query the balance of the wallet and update the wallet file.
@@ -43,6 +45,9 @@ async function checkBalance (BITBOX, updateBalance) {
 
       console.log(`Threshold of ${THRESHOLD} BCH reached for round ${round}! Current balance: ${balance}`)
 
+      // Update the participant DB with the recieved amounts.
+      await validateSatoshisRecieved(newWalletInfo, round, BITBOX)
+
       // Swap out existing wallet and increase the ROUND.
       // const newWallet = await swapWallet(BITBOX)
       await swapWallet(BITBOX)
@@ -63,6 +68,48 @@ async function checkBalance (BITBOX, updateBalance) {
   } catch (err) {
     console.log(`Error in check-balance.js/checkBalance()`)
     throw err
+  }
+}
+
+// Update the participants satoshisReceived
+async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
+  // Dev Assumption: There is only 1 UTXO in the address. This should be valid
+  // if the user is using an appropriate wallet (bch-cli-wallet)
+
+  console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
+
+  const participants = await Participant.find({})
+  console.log(`participants: ${util.inspect(participants)}`)
+
+  // Loop through all the participants.
+  for (var i = 0; i < participants.length; i++) {
+    const thisParticipant = participants[i]
+    const inAddrs = thisParticipant.inputAddrs
+
+    // Initialize the satoshisReceived property if it's not already.
+    if (!thisParticipant.satoshisReceived) thisParticipant.satoshisReceived = 0
+
+    console.log(`this participant: ${util.inspect(thisParticipant)}`)
+
+    // Only process particpants of the current round.
+    if (thisParticipant.round === round) {
+      // Loop through each input address.
+      for (var j = 0; j < inAddrs.length; j++) {
+        const thisAddr = inAddrs[i]
+
+        // Query the balance of that address.
+        const thisAddrDetails = await BITBOX.Address.details([thisAddr])
+        console.log(`thisAddrDetails: ${util.inspect(thisAddrDetails)}`)
+
+        if (thisAddrDetails.length > 1) { console.log(`Warning: check-balance.js/validateSatoshisRecieved detectedd multiple UTXOs in the input address.`) }
+
+        // Add the confirmed balance to satoshisRecieved.
+        thisParticipant.satoshisReceived += thisAddrDetails[0].balanceSat
+        console.log(`thisParticipant.satoshisReceived: ${thisParticipant.satoshisReceived}`)
+      }
+    }
+
+    await thisParticipant.save()
   }
 }
 
