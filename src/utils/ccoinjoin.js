@@ -47,6 +47,14 @@ async function getParticipantOutputs (round) {
 
     if (!coinjoinoutSat || coinjoinoutSat <= 0) throw new Error(`COINJOINOUT env var not set`)
 
+    // The amount sent to each participant needs to be slightly less than the
+    // satoshis recieved, since there will be a transaction fee. The transaction
+    // fee is not caclulated until later. To compensate, a usage fee is subtracted
+    // here. This could be considered a fee for using the system. For now,
+    // I'm setting it to 1000 satoshis. I'll need to add code later to recover
+    // this fee.
+    const FEE_SAT = 1000
+
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
     console.log(`${participants.length} participants in round ${round}`)
@@ -61,7 +69,7 @@ async function getParticipantOutputs (round) {
 
       // Only process particpants of the current round.
       if (thisParticipant.round === round) {
-        let remainder = thisParticipant.satoshisReceived
+        let remainder = thisParticipant.satoshisReceived - FEE_SAT
 
         // Loop through each output address for this participant.
         for (var j = 0; j < thisParticipant.outputAddrs.length; j++) {
@@ -115,7 +123,6 @@ async function getParticipantOutputs (round) {
 // This is 'TX N+2'
 async function distributeFunds (walletInfo, BITBOX, outAddrs) {
   try {
-    console.log(`Distributing ${walletInfo.balance} BCH to ${outAddrs.length} addresses.`)
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
@@ -151,6 +158,8 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
 
     let originalAmount = utxo.satoshis
 
+    console.log(`Distributing ${originalAmount} BCH to ${outAddrs.length} addresses.`)
+
     // original amount of satoshis in vin
     // const originalAmount = inputs.length * dust
     console.log(`originalAmount: ${originalAmount}`)
@@ -172,9 +181,9 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       const thisOutAddr = outAddrs[i]
 
       // For now, the fee gets subtracted from the first output.
-      if (i === 0) {
-        thisOutAddr.amountSat -= fee
-      }
+      // if (i === 0) {
+      //  thisOutAddr.amountSat -= fee
+      // }
 
       // add output w/ address and amount to send
       transactionBuilder.addOutput(thisOutAddr.addr, thisOutAddr.amountSat)
