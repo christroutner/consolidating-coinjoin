@@ -32,14 +32,14 @@ async function checkBalance (BITBOX, updateBalance) {
     const filename = `${__dirname}/../../wallets/wallet.json`
     let walletInfo = await appUtil.openWallet(filename)
 
+    // TODO: Needs to differentiate between confirmed and unconfirmed balances
     const newWalletInfo = await updateBalance.updateBalances(FILENAME, walletInfo, BITBOX)
-
-    // console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
-    // return newWalletInfo.balance
 
     const balance = newWalletInfo.balance
 
     if (balance >= THRESHOLD) {
+      console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
+
       // Save the current round.
       const round = Number(process.env.ROUND)
 
