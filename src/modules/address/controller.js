@@ -22,6 +22,7 @@ async function createParticipant (ctx) {
     // Input Validation
     if (!Array.isArray(outputAddrs)) return ctx.throw(422, `outputAddrs must be an array`)
     if (isNaN(parseFloat(amount))) return ctx.throw(422, `amount needs to be a number`)
+    if (!Number.isInteger(amount)) return ctx.throw(422, `amount needs to be an integer (satoshis)`)
 
     // Create a new participant model.
     const participant = new Participant()

@@ -5,7 +5,7 @@ const Participant = new mongoose.Schema({
   inputAddrs: { type: Array }, // Input Addresses assigned to this participant.
   outputAddrs: { type: Array }, // The Output addresses provided by the participant.
   satoshisReported: { type: Number }, // Satoshis participant said they'd send.
-  satoshisRecieved: { type: Number }, // Satoshis recieved and confirmed.
+  satoshisReceived: { type: Number }, // Satoshis recieved and confirmed.
   txids: { type: Array } // Array of TXIDs of UTXOs reiceved from participant.
 })
 

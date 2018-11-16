@@ -1,0 +1,41 @@
+{
+  "network": "testnet",
+  "mnemonic": "height tonight gap spawn sand bless original jaguar trap cram plug fiscal try fringe uniform alley embark betray beach bounce toward never huge injury",
+  "rootAddress": "bchtest:qptycuuqwh9473px94fxj8jql7f7k0s3suevn7gca7",
+  "balance": 0.13269156,
+  "nextAddress": 5,
+  "hasBalance": [
+    {
+      "index": 1,
+      "balance": 0.05319789,
+      "balanceSat": 5319789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qr77t29tpqyvdwydsrcl8jyf73f4yv5mzqjkwq2fr7"
+    },
+    {
+      "index": 2,
+      "balance": 0.01299789,
+      "balanceSat": 1299789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qr7mch8wkmc59gdjcvuuugean84esl9p3szfp6nktm"
+    },
+    {
+      "index": 3,
+      "balance": 0.05549789,
+      "balanceSat": 5549789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qqawytmxmettzhjpm58hsz9e4wtth64pfyc4jxlclf"
+    },
+    {
+      "index": 4,
+      "balance": 0.01099789,
+      "balanceSat": 1099789,
+      "unconfirmedBalance": 0,
+      "unconfirmedBalanceSat": 0,
+      "cashAddress": "bchtest:qp4jdz4msv8vl54htr0dlty75shfzr2lzcs7dlvsez"
+    }
+  ]
+}
