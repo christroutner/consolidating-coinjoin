@@ -1,6 +1,11 @@
 # Consolidating CoinJoin
 This is an API server forked from this [koa boilerplate](https://github.com/christroutner/babel-free-koa2-api-boilerplate). It implements the Consolidating CoinJoin [described here](https://gist.github.com/christroutner/457b99b8033fdea5ae565687e6360323). It works with this [BCH command-line wallet](https://github.com/christroutner/bch-cli-wallet).
 
+
+Version 1.1.0 is a barely functional prototype. This version will be refactored,
+tests will be added, and functionality iterated upon.
+
+
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 [![Coverage Status](https://coveralls.io/repos/github/christroutner/consolidating-coinjoin/badge.svg?branch=master)](https://coveralls.io/github/christroutner/consolidating-coinjoin?branch=master)
