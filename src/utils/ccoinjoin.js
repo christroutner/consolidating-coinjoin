@@ -58,7 +58,7 @@ async function getParticipantOutputs (round) {
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
     console.log(`${participants.length} participants in round ${round}`)
-    console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
+    // console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
 
     const outputAddrs = []
 
@@ -74,8 +74,8 @@ async function getParticipantOutputs (round) {
         // Loop through each output address for this participant.
         for (var j = 0; j < thisParticipant.outputAddrs.length; j++) {
           const thisAddr = thisParticipant.outputAddrs[j]
-          console.log(`thisAddr: ${util.inspect(thisAddr)}`)
-          console.log(`remainder: ${remainder}`)
+          // console.log(`thisAddr: ${util.inspect(thisAddr)}`)
+          // console.log(`remainder: ${remainder}`)
 
           // If the next output address doesn't exist, exit the loop.
           if (!thisAddr || thisAddr === '') continue
@@ -202,7 +202,7 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       utxo.satoshis
     )
 
-    console.log(`transactionBuilder: ${util.inspect(transactionBuilder)}`)
+    // console.log(`transactionBuilder: ${util.inspect(transactionBuilder)}`)
 
     // build tx
     const tx = transactionBuilder.build()

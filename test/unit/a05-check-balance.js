@@ -40,7 +40,7 @@ describe('Check Balance Utilities', () => {
         updateBalances: sinon.stub().returns({ balance: 0.01 })
       }
 
-      const balance = await checkBalance.checkBalance(mockedWallet, BITBOX, updateBalance)
+      const balance = await checkBalance.checkBalance(BITBOX, updateBalance)
       // console.log(`balance: ${balance}`)
 
       assert.equal(balance, 0.01)
