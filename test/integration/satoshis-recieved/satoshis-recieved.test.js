@@ -8,7 +8,7 @@
 
 'use strict'
 
-process.env.NODE_ENV = 'test'
+process.env.COINJOIN_ENV = 'test'
 // process.env.COINJOINOUT = 0.01
 
 const mongoose = require('mongoose')

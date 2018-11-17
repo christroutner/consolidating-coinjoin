@@ -1,5 +1,10 @@
 const Participant = require('../../models/participant')
 const GetAddress = require('bch-cli-wallet/src/commands/get-address')
+const wlogger = require(`../../utils/logging`)
+
+// Used for error logging.
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
 
 // Determine the network. Testnet by default.
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
@@ -14,6 +19,8 @@ if (NETWORK === 'testnet') {
 
 async function createParticipant (ctx) {
   try {
+    wlogger.debug(`entering createParticipant()`)
+
     // Retrieve input data from POST body.
     const outputAddrs = ctx.request.body.outAddrs
     const numInputs = ctx.request.body.numInputs
@@ -50,6 +57,7 @@ async function createParticipant (ctx) {
     // Return the input addresses to the participant.
     ctx.body = participant
   } catch (err) {
+    wlogger.error(`error in createParticipant(): ${util.inspect(err)}`)
     ctx.throw(422, err.message)
   }
 }

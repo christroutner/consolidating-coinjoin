@@ -26,7 +26,7 @@ transport.on('rotate', function (oldFilename, newFilename) {
 })
 
 const wlogger = winston.createLogger({
-  level: 'verbose',
+  level: 'debug',
   format: winston.format.json(),
   transports: [
     //
@@ -40,8 +40,11 @@ const wlogger = winston.createLogger({
 })
 
 // Add simple logging to the console.
-wlogger.add(new winston.transports.Console({
-  format: winston.format.simple()
-}))
+if (process.env.COINJOIN_ENV !== 'test') {
+  wlogger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+    level: 'info'
+  }))
+}
 
 module.exports = wlogger
