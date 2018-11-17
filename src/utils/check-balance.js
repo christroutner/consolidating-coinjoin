@@ -7,6 +7,7 @@
 const shelljs = require('shelljs')
 const ccoinjoin = require('./ccoinjoin')
 const Participant = require('../models/participant')
+const wlogger = require(`./logging`)
 
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
@@ -29,6 +30,8 @@ module.exports = {
 // Query the balance of the wallet and update the wallet file.
 async function checkBalance (BITBOX, updateBalance) {
   try {
+    wlogger.debug(`entering checkBalance()`)
+
     const filename = `${__dirname}/../../wallets/wallet.json`
     let walletInfo = await appUtil.openWallet(filename)
 
@@ -66,7 +69,8 @@ async function checkBalance (BITBOX, updateBalance) {
 
     return balance
   } catch (err) {
-    console.log(`Error in check-balance.js/checkBalance()`)
+    wlogger.error(`Error in checkBalance(): ${util.inspect(err)}`)
+    console.log(`Error in checkBalance()`)
     throw err
   }
 }
@@ -76,6 +80,8 @@ async function checkBalance (BITBOX, updateBalance) {
 async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
   // Dev Assumption: There is only 1 UTXO in the address. This should be valid
   // if the user is using an appropriate wallet (bch-cli-wallet)
+
+  wlogger.debug(`entering validateSatoshisRecieved()`)
 
   console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
 
@@ -116,6 +122,8 @@ async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
 
 // Swaps out the existing wallet with a new wallet. Also increments the ROUND.
 async function swapWallet (BITBOX) {
+  wlogger.debug(`entering swapWallet()`)
+
   // Swap out the existing wallet.
   shelljs.mv(FILENAME, ACTIVE_WALLET)
 
@@ -137,6 +145,8 @@ async function swapWallet (BITBOX) {
 
 // Delete the active wallet.
 function deleteWallet (round) {
+  wlogger.debug(`entering deleteWallet()`)
+
   // Delete the wallet.
   shelljs.rm(ACTIVE_WALLET)
 
@@ -146,6 +156,8 @@ function deleteWallet (round) {
 
 // monitor the considation TX and kick off the distribution after it confirms.
 async function monitorTx (txid, round, walletInfo, BITBOX) {
+  wlogger.debug(`entering monitorTx()`)
+
   await waitFor1Conf(txid, BITBOX)
 
   // Get a list of addresses and amounts to send to the participants.
@@ -165,6 +177,8 @@ async function monitorTx (txid, round, walletInfo, BITBOX) {
 
 // Wait until the TX shows at least 1 confirmation.
 async function waitFor1Conf (txid, BITBOX) {
+  wlogger.debug(`entering waitFor1Conf()`)
+
   const PERIOD = 1000 * 30 // 30 seconds
 
   let confirms = 0
@@ -185,13 +199,17 @@ async function waitFor1Conf (txid, BITBOX) {
 // Get Token info from the TX.
 async function getTxInfo (txid, BITBOX) {
   try {
+    wlogger.debug(`entering getTxInfo()`)
+
     // const retVal = await BITBOX.DataRetrieval.transaction(txid)
     const txInfo = await BITBOX.Transaction.details(txid)
     // console.log(`Info from TXID ${txid}: ${JSON.stringify(retVal, null, 2)}`)
     return txInfo.confirmations
   } catch (err) {
+    wlogger.error(`Error in getTxInfo(): ${util.inspect(err)}`)
+    console.log(`Error in getTxInfo()`)
+
     // Catch network errors and try again.
-    console.log(`Error in getTxInfo():`, err)
     return 0
   }
 }
