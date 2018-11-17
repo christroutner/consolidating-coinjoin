@@ -49,7 +49,7 @@ async function getParticipantOutputs (round) {
   try {
     wlogger.debug(`getParticipantOutputs()`)
 
-    console.log(`Getting participants for round ${round}.`)
+    wlogger.info(`Getting participants for round ${round}.`)
     const coinjoinoutSat = Number(process.env.COINJOINOUT) * 100000000
 
     if (!coinjoinoutSat || coinjoinoutSat <= 0) throw new Error(`COINJOINOUT env var not set`)
@@ -64,7 +64,7 @@ async function getParticipantOutputs (round) {
 
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
-    console.log(`${participants.length} participants in round ${round}`)
+    wlogger.info(`${participants.length} participants in round ${round}`)
     // console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
 
     const outputAddrs = []

@@ -13,9 +13,10 @@ const wlogger = require(`./logging`)
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
 const appUtil = require('bch-cli-wallet/src/util')
 
-const FILENAME = `${__dirname}/../../wallets/wallet.json`
-const ACTIVE_WALLET = `${__dirname}/../../wallets/active-wallet.json`
-const THRESHOLD = 0.1
+const FILENAME = process.env.FILENAME ? process.env.FILENAME : `${__dirname}/../../wallets/wallet.json`
+const ACTIVE_WALLET = process.env.ACTIVE_WALLET ? process.env.ACTIVE_WALLET : `${__dirname}/../../wallets/active-wallet.json`
+const THRESHOLD = process.env.THRESHOLD ? process.env.THRESHOLD : 0.1
+wlogger.debug(`FILENAME: ${FILENAME}, ACTIVE_WALLET: ${ACTIVE_WALLET}, THRESHOLD: ${THRESHOLD}`)
 
 const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
@@ -64,7 +65,7 @@ async function checkBalance (BITBOX, updateBalance) {
       // Note: no await is used because we don't want this function to wait on it.
       monitorTx(txid, round, newWalletInfo, BITBOX)
     } else {
-      console.log(`Current balance of ${balance} has not reached the threshold of ${THRESHOLD} BCH`)
+      wlogger.info(`Current balance of ${balance} has not reached the threshold of ${THRESHOLD} BCH`)
     }
 
     return balance
@@ -75,48 +76,50 @@ async function checkBalance (BITBOX, updateBalance) {
   }
 }
 
-// TODO Needs unit test.
 // Update the satoshisReceived field in the participants model.
 async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
   // Dev Assumption: There is only 1 UTXO in the address. This should be valid
   // if the user is using an appropriate wallet (bch-cli-wallet)
+  try {
+    wlogger.debug(`entering validateSatoshisRecieved()`)
+    wlogger.debug(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
 
-  wlogger.debug(`entering validateSatoshisRecieved()`)
+    const participants = await Participant.find({})
+    wlogger.debug(`participants: ${util.inspect(participants)}`)
 
-  console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
+    // Loop through all the participants.
+    for (var i = 0; i < participants.length; i++) {
+      const thisParticipant = participants[i]
+      const inAddrs = thisParticipant.inputAddrs
 
-  const participants = await Participant.find({})
-  console.log(`participants: ${util.inspect(participants)}`)
+      // Initialize the satoshisReceived property if it's not already.
+      thisParticipant.satoshisReceived = 0
+      wlogger.debug(`this participant: ${util.inspect(thisParticipant)}`)
 
-  // Loop through all the participants.
-  for (var i = 0; i < participants.length; i++) {
-    const thisParticipant = participants[i]
-    const inAddrs = thisParticipant.inputAddrs
-
-    // Initialize the satoshisReceived property if it's not already.
-    thisParticipant.satoshisReceived = 0
-
-    console.log(`this participant: ${util.inspect(thisParticipant)}`)
-
-    // Only process particpants of the current round.
-    if (thisParticipant.round === round) {
+      // Only process particpants of the current round.
+      if (thisParticipant.round === round) {
       // Loop through each input address.
-      for (var j = 0; j < inAddrs.length; j++) {
-        const thisAddr = inAddrs[j]
+        for (var j = 0; j < inAddrs.length; j++) {
+          const thisAddr = inAddrs[j]
 
-        // Query the balance of that address.
-        const thisAddrDetails = await BITBOX.Address.details([thisAddr])
-        console.log(`thisAddrDetails: ${util.inspect(thisAddrDetails)}`)
+          // Query the balance of that address.
+          const thisAddrDetails = await BITBOX.Address.details([thisAddr])
+          wlogger.debug(`thisAddrDetails: ${util.inspect(thisAddrDetails)}`)
 
-        if (thisAddrDetails.length > 1) { console.log(`Warning: check-balance.js/validateSatoshisRecieved detectedd multiple UTXOs in the input address.`) }
+          if (thisAddrDetails.length > 1) { console.log(`Warning: check-balance.js/validateSatoshisRecieved detectedd multiple UTXOs in the input address.`) }
 
-        // Add the confirmed balance to satoshisRecieved.
-        thisParticipant.satoshisReceived += thisAddrDetails[0].balanceSat
-        console.log(`thisParticipant.satoshisReceived: ${thisParticipant.satoshisReceived}`)
+          // Add the confirmed balance to satoshisRecieved.
+          thisParticipant.satoshisReceived += thisAddrDetails[0].balanceSat
+          wlogger.debug(`thisParticipant.satoshisReceived: ${thisParticipant.satoshisReceived}`)
+        }
       }
-    }
 
-    await thisParticipant.save()
+      await thisParticipant.save()
+    }
+  } catch (err) {
+    wlogger.error(`Error in validateSatoshisRecieved(): ${util.inspect(err)}`)
+    console.log(`Error in validateSatoshisRecieved()`)
+    throw err
   }
 }
 
@@ -129,7 +132,7 @@ async function swapWallet (BITBOX) {
 
   // Update the ROUND.
   process.env.ROUND = Number(process.env.ROUND) + 1
-  console.log(`Starting round ${process.env.ROUND}`)
+  wlogger.info(`Starting round ${process.env.ROUND}`)
 
   // Create a new wallet.
   const createWallet = new CreateWallet()

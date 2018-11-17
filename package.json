@@ -9,7 +9,7 @@
     "lint": "eslint src/**/*.js",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coverage:report": "nyc --reporter=html mocha --exit",
+    "coverage:report": "COINJOIN_ENV=test nyc --reporter=html mocha --exit test/unit",
     "semantic-release": "semantic-release"
   },
   "keywords": [

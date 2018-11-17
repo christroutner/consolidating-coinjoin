@@ -20,7 +20,11 @@ const UpdateBalance = require('bch-cli-wallet/src/commands/update-balances')
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
 
+// SERVER CONFIGURATION
 const CHECK_BALANCE_PERIOD = 1000 * 60 * 2 // 2 minutes
+process.env.FILENAME = `${__dirname}/../wallets/wallet.json`
+process.env.ACTIVE_WALLET = `${__dirname}/../wallets/active-wallet.json`
+process.env.THRESHOLD = 0.1 // for triggering a CoinJoin round.
 
 // Determine the network. Testnet by default.
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
