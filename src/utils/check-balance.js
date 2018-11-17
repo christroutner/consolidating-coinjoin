@@ -35,7 +35,7 @@ async function checkBalance (BITBOX, updateBalance) {
     // TODO: Needs to differentiate between confirmed and unconfirmed balances
     const newWalletInfo = await updateBalance.updateBalances(FILENAME, walletInfo, BITBOX)
 
-    const balance = newWalletInfo.balance
+    const balance = newWalletInfo.balanceConfirmed
 
     if (balance >= THRESHOLD) {
       console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
