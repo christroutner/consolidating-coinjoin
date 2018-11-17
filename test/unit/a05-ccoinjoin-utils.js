@@ -9,7 +9,7 @@ TODO:
 const utils = require('./utils')
 // const rp = require('request-promise')
 const assert = require('chai').assert
-const checkBalance = require('../../src/utils/check-balance')
+const cCoinJoinUtils = require('../../src/utils/ccoinjoin-utils')
 const sinon = require('sinon')
 const shelljs = require('shelljs')
 
@@ -40,7 +40,7 @@ describe('Check Balance Utilities', () => {
         updateBalances: sinon.stub().returns({ balanceConfirmed: 0.01 })
       }
 
-      const balance = await checkBalance.checkBalance(BITBOX, updateBalance)
+      const balance = await cCoinJoinUtils.checkBalance(BITBOX, updateBalance)
       // console.log(`balance: ${balance}`)
 
       assert.equal(balance, 0.01)
@@ -49,7 +49,7 @@ describe('Check Balance Utilities', () => {
 
   describe('Wallet Utils', () => {
     it('should swap out the wallet file.', async () => {
-      await checkBalance.swapWallet(BITBOX)
+      await cCoinJoinUtils.swapWallet(BITBOX)
 
       const afterFileList = shelljs.ls(`${__dirname}/../../wallets/`)
 
@@ -58,7 +58,7 @@ describe('Check Balance Utilities', () => {
     })
 
     it('should delete the active wallet file', async () => {
-      await checkBalance.deleteWallet(1)
+      await cCoinJoinUtils.deleteWallet(1)
 
       const afterFileList = shelljs.ls(`${__dirname}/../../wallets/`)
 

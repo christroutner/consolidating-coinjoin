@@ -8,7 +8,7 @@ const passport = require('koa-passport')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
-const checkBalance = require('../src/utils/check-balance')
+const cCoinJoinUtils = require('../src/utils/ccoinjoin-utils')
 
 // Winston logger
 const wlogger = require('../src/utils/logging')
@@ -100,7 +100,7 @@ async function startServer () {
   // Periodically check the balance of server's wallet
   setInterval(function () {
     const updateBalance = new UpdateBalance()
-    checkBalance.checkBalance(BITBOX, updateBalance)
+    cCoinJoinUtils.checkBalance(BITBOX, updateBalance)
   }, CHECK_BALANCE_PERIOD)
 
   return app

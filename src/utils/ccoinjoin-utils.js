@@ -76,7 +76,7 @@ async function checkBalance (BITBOX, updateBalance) {
 }
 
 // TODO Needs unit test.
-// Update the participants satoshisReceived
+// Update the satoshisReceived field in the participants model.
 async function validateSatoshisRecieved (newWalletInfo, round, BITBOX) {
   // Dev Assumption: There is only 1 UTXO in the address. This should be valid
   // if the user is using an appropriate wallet (bch-cli-wallet)
@@ -201,9 +201,9 @@ async function getTxInfo (txid, BITBOX) {
   try {
     wlogger.debug(`entering getTxInfo()`)
 
-    // const retVal = await BITBOX.DataRetrieval.transaction(txid)
     const txInfo = await BITBOX.Transaction.details(txid)
-    // console.log(`Info from TXID ${txid}: ${JSON.stringify(retVal, null, 2)}`)
+    wlogger.debug(`Info from TXID ${txid}: ${JSON.stringify(txInfo, null, 2)}`)
+
     return txInfo.confirmations
   } catch (err) {
     wlogger.error(`Error in getTxInfo(): ${util.inspect(err)}`)
