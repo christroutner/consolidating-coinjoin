@@ -26,7 +26,7 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
   try {
     // Get all UTXOs controlled by this wallet.
     const utxos = await appUtil.getUTXOs(walletInfo, BITBOX)
-    console.log(`utxos: ${util.inspect(utxos)}`)
+    // console.log(`utxos: ${util.inspect(utxos)}`)
 
     // Consolidate all UTXOs in the wallet to a single UTXO in the root address.
     const sendAll = new SendAll()

@@ -37,7 +37,7 @@ describe('Check Balance Utilities', () => {
   describe('Check Balance', () => {
     it('should update the balance', async () => {
       const updateBalance = {
-        updateBalances: sinon.stub().returns({ balance: 0.01 })
+        updateBalances: sinon.stub().returns({ balanceConfirmed: 0.01 })
       }
 
       const balance = await checkBalance.checkBalance(BITBOX, updateBalance)
@@ -58,7 +58,7 @@ describe('Check Balance Utilities', () => {
     })
 
     it('should delete the active wallet file', async () => {
-      await checkBalance.deleteWallet()
+      await checkBalance.deleteWallet(1)
 
       const afterFileList = shelljs.ls(`${__dirname}/../../wallets/`)
 
