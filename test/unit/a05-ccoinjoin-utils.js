@@ -88,4 +88,23 @@ describe('Check Balance Utilities', () => {
       assert.equal(participants[0].satoshisReceived, 5000000, 'satoshisRecieved should match')
     })
   })
+
+  describe('getTxInfo', () => {
+    it('should validate the satoshis recieved', async () => {
+      const result = await cCoinJoinUtils.getTxInfo('mockTXID', BITBOX)
+      // console.log(`result: ${util.inspect(result)}`)
+
+      assert.equal(result, 1, 'Expecting 1 confirmation mocked data')
+    })
+
+    it('should return zero if there is a (network) error', async () => {
+      // Force an error
+      BITBOX.Transaction.details = sinon.stub().returns()
+
+      const result = await cCoinJoinUtils.getTxInfo('mockTXID', BITBOX)
+      // console.log(`result: ${util.inspect(result)}`)
+
+      assert.equal(result, 0)
+    })
+  })
 })

@@ -25,7 +25,8 @@ module.exports = {
   checkBalance, // Check the balance of the wallet.
   swapWallet, // Rename the current wallet and swap it out with a new one.
   deleteWallet, // Delete the wallet and DB entries to clean up.
-  validateSatoshisRecieved
+  validateSatoshisRecieved, // Verifiy the BCH sent by the user.
+  getTxInfo // Return number of confirmations for a given TX.
 }
 
 // Query the balance of the wallet and update the wallet file.
@@ -199,7 +200,8 @@ async function waitFor1Conf (txid, BITBOX) {
   // return true
 }
 
-// Get Token info from the TX.
+// Returns the number of confirmations, given a TX.
+// Returns 0 if there is an error.
 async function getTxInfo (txid, BITBOX) {
   try {
     wlogger.debug(`entering getTxInfo()`)
