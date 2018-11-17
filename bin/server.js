@@ -9,7 +9,6 @@ const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
 const checkBalance = require('../src/utils/check-balance')
-const winston = require('winston')
 
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
@@ -65,17 +64,32 @@ async function startServer () {
   }
 
   // LOGGING
+  const winston = require('winston')
+  require('winston-daily-rotate-file')
+
+  // Configure daily-rotation transport.
+  const transport = new (winston.transports.DailyRotateFile)({
+    filename: 'logs/application-%DATE%.log',
+    datePattern: 'YYYY-MM-DD-HH',
+    zippedArchive: false,
+    maxSize: '1m',
+    maxFiles: '14d'
+  })
+  transport.on('rotate', function (oldFilename, newFilename) {
+    wlogger.info(`Rotating log files`)
+  })
 
   const wlogger = winston.createLogger({
-    level: 'info',
+    level: 'verbose',
     format: winston.format.json(),
     transports: [
       //
       // - Write to all logs with level `info` and below to `combined.log`
       // - Write all logs error (and below) to `error.log`.
       //
-      new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-      new winston.transports.File({ filename: 'logs/combined.log' })
+      // new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+      // new winston.transports.File({ filename: 'logs/combined.log' })
+      transport
     ]
   })
   //
