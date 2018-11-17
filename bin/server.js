@@ -69,11 +69,15 @@ async function startServer () {
 
   // Configure daily-rotation transport.
   const transport = new (winston.transports.DailyRotateFile)({
-    filename: 'logs/application-%DATE%.log',
+    filename: 'logs/coinjoin-%DATE%.log',
     datePattern: 'YYYY-MM-DD-HH',
     zippedArchive: false,
     maxSize: '1m',
-    maxFiles: '14d'
+    maxFiles: '14d',
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.json()
+    )
   })
   transport.on('rotate', function (oldFilename, newFilename) {
     wlogger.info(`Rotating log files`)
