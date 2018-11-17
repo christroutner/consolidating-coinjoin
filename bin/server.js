@@ -10,6 +10,9 @@ const serve = require('koa-static')
 const cors = require('kcors')
 const checkBalance = require('../src/utils/check-balance')
 
+// Winston logger
+const wlogger = require('../src/utils/logging')
+
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
 const UpdateBalance = require('bch-cli-wallet/src/commands/update-balances')
@@ -62,49 +65,6 @@ async function startServer () {
       mongoose.connection.collections[collection].deleteMany()
     }
   }
-
-  // LOGGING
-  const winston = require('winston')
-  require('winston-daily-rotate-file')
-
-  // Configure daily-rotation transport.
-  const transport = new (winston.transports.DailyRotateFile)({
-    filename: 'logs/coinjoin-%DATE%.log',
-    datePattern: 'YYYY-MM-DD-HH',
-    zippedArchive: false,
-    maxSize: '1m',
-    maxFiles: '14d',
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
-    )
-  })
-  transport.on('rotate', function (oldFilename, newFilename) {
-    wlogger.info(`Rotating log files`)
-  })
-
-  const wlogger = winston.createLogger({
-    level: 'verbose',
-    format: winston.format.json(),
-    transports: [
-      //
-      // - Write to all logs with level `info` and below to `combined.log`
-      // - Write all logs error (and below) to `error.log`.
-      //
-      // new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-      // new winston.transports.File({ filename: 'logs/combined.log' })
-      transport
-    ]
-  })
-  //
-  // If we're not in production then log to the `console` with the format:
-  // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-  //
-  // if (process.env.NODE_ENV !== 'production') {
-  wlogger.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }))
-  // }
 
   // MIDDLEWARE START
 
