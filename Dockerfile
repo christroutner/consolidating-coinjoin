@@ -33,7 +33,6 @@ RUN runuser -l coinjoin -c "npm config set prefix '~/.npm-global'"
 # Expose the port the API will be served on.
 EXPOSE 5000
 
-
 # Switch to user account.
 USER coinjoin
 # Prep 'sudo' commands.
@@ -49,6 +48,8 @@ WORKDIR /home/coinjoin/consolidating-coinjoin
 
 # Install dependencies
 RUN npm install
+
+VOLUME /home/coinjoin/consolidating-coinjoin/logs
 
 # Start the application.
 COPY start-production start-production
