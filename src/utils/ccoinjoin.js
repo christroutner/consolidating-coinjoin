@@ -60,7 +60,7 @@ async function getParticipantOutputs (round) {
     // here. This could be considered a fee for using the system. For now,
     // I'm setting it to 1000 satoshis. I'll need to add code later to recover
     // this fee.
-    const FEE_SAT = 1000
+    const FEE_SAT = 2000
 
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
@@ -186,6 +186,8 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
     const sendAmount = originalAmount - fee
     wlogger.debug(`sendAmount: ${sendAmount}`)
 
+    let bchOutTotal = 0
+
     // Loop through the output addresses
     for (var i = 0; i < outAddrs.length; i++) {
       const thisOutAddr = outAddrs[i]
@@ -195,9 +197,12 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       //  thisOutAddr.amountSat -= fee
       // }
 
+      bchOutTotal += thisOutAddr.amountSat
+
       // add output w/ address and amount to send
       transactionBuilder.addOutput(thisOutAddr.addr, thisOutAddr.amountSat)
     }
+    wlogger.debug(`Summed output BCH: ${bchOutTotal}`)
 
     // keypair
     const keyPair = BITBOX.HDNode.toKeyPair(change)
