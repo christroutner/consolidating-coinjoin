@@ -16,7 +16,7 @@ ccoinjoin:
     - ccoinjoin-mongodb
   ports:
     - "5000:5000"  # <host port>:<container port>
-
-#  volumes:
+  volumes:
+    - ./logs:/home/coinjoin/consolidating-coinjoin/logs
 
   restart: always
