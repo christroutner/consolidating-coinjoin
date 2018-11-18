@@ -44,7 +44,7 @@ async function checkBalance (BITBOX, updateBalance) {
     const balance = newWalletInfo.balanceConfirmed
 
     if (balance >= THRESHOLD) {
-      console.log(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
+      wlogger.debug(`newWalletInfo: ${util.inspect(newWalletInfo)}`)
 
       // Save the current round.
       const round = Number(process.env.ROUND)
