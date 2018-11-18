@@ -89,6 +89,12 @@ describe('Check Balance Utilities', () => {
     })
   })
 
+  describe('waitFor1Conf', () => {
+    it('should return when 1 conf is recieved for tx', async () => {
+      await cCoinJoinUtils.waitFor1Conf('mockTXID', BITBOX)
+    })
+  })
+
   describe('getTxInfo', () => {
     it('should validate the satoshis recieved', async () => {
       const result = await cCoinJoinUtils.getTxInfo('mockTXID', BITBOX)

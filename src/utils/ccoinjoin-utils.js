@@ -26,7 +26,8 @@ module.exports = {
   swapWallet, // Rename the current wallet and swap it out with a new one.
   deleteWallet, // Delete the wallet and DB entries to clean up.
   validateSatoshisRecieved, // Verifiy the BCH sent by the user.
-  getTxInfo // Return number of confirmations for a given TX.
+  getTxInfo, // Return number of confirmations for a given TX.
+  waitFor1Conf // Async sleep that exits when 1 conf is returned for a TXID
 }
 
 // Query the balance of the wallet and update the wallet file.
@@ -183,15 +184,19 @@ async function monitorTx (txid, round, walletInfo, BITBOX) {
 async function waitFor1Conf (txid, BITBOX) {
   wlogger.debug(`entering waitFor1Conf()`)
 
-  const PERIOD = 1000 * 30 // 30 seconds
+  let PERIOD = 1000 * 30 // 30 seconds
+
+  // Used for unit testing.
+  if (txid === 'mockTXID') PERIOD = 10
 
   let confirms = 0
   const txidMin = txid.slice(-6)
 
   while (confirms < 1) {
-    console.log(`Checking TX ${txidMin} for confirmation...`)
+    wlogger.info(`Checking TX ${txidMin} for confirmation...`)
 
     confirms = await getTxInfo(txid, BITBOX)
+    wlogger.info(`confirms: ${confirms}`)
 
     // Wait and check again.
     await sleep(PERIOD)
