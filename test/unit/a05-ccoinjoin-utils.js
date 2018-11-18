@@ -92,6 +92,16 @@ describe('Check Balance Utilities', () => {
   describe('waitFor1Conf', () => {
     it('should return when 1 conf is recieved for tx', async () => {
       await cCoinJoinUtils.waitFor1Conf('mockTXID', BITBOX)
+      // This test passes if it returns
+    })
+  })
+
+  describe('monitorTx', () => {
+    it('should execute TX N+2 when TX N+1 achieves 1 confirmation', async () => {
+      const result = await cCoinJoinUtils.monitorTx('mockTXID', 0, mockedWallet, BITBOX)
+      // console.log(`result: ${util.inspect(result)}`)
+
+      assert.equal(result, 'mockTXID', 'Mocked TXID expected to be returned.')
     })
   })
 
@@ -103,6 +113,7 @@ describe('Check Balance Utilities', () => {
       assert.equal(result, 1, 'Expecting 1 confirmation mocked data')
     })
 
+    // This test should be run last, as it manipulates the BITBOX mock.
     it('should return zero if there is a (network) error', async () => {
       // Force an error
       BITBOX.Transaction.details = sinon.stub().returns()
