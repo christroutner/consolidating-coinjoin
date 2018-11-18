@@ -1,0 +1,2 @@
+#!/bin/bash
+docker container run --name rest.bitcoin.com --rm -p 3003:3000 -it rest.bitcoin.com /bin/bash
