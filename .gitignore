@@ -4,7 +4,7 @@
 
 ### Node ###
 # Logs
-logs
+#logs
 *.log
 npm-debug.log*
 
@@ -60,5 +60,4 @@ docs
 .nyc_output
 coverage
 wallets/*.json
-logs/
 database/
