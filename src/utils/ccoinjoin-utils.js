@@ -39,7 +39,6 @@ async function checkBalance (BITBOX, updateBalance) {
     const filename = `${__dirname}/../../wallets/wallet.json`
     let walletInfo = await appUtil.openWallet(filename)
 
-    // TODO: Needs to differentiate between confirmed and unconfirmed balances
     const newWalletInfo = await updateBalance.updateBalances(FILENAME, walletInfo, BITBOX)
 
     const balance = newWalletInfo.balanceConfirmed
