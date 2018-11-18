@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Run the insight-bch Docker image
+docker container run --name rest.bitcoin.com -d -p 3003:3000 --rm rest.bitcoin.com

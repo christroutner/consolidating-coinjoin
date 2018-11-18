@@ -1,3 +1,4 @@
+// Used to authorize a user by analyzing their JWT token.
 module.exports = function getToken (ctx) {
   const header = ctx.request.header.authorization
   if (!header) {

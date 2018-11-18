@@ -2,8 +2,16 @@
 This is an API server forked from this [koa boilerplate](https://github.com/christroutner/babel-free-koa2-api-boilerplate). It implements the Consolidating CoinJoin [described here](https://gist.github.com/christroutner/457b99b8033fdea5ae565687e6360323). It works with this [BCH command-line wallet](https://github.com/christroutner/bch-cli-wallet).
 
 
-Version 1.1.0 is a barely functional prototype. This version will be refactored,
+Version 1.1.1 is a proof-of-concept prototype. This version will be refactored,
 tests will be added, and functionality iterated upon.
+
+Future improvements to be made:
+- Add bootstrap bot, to bootstrap initial volume and ensure users money are returned within 24 hours.
+- Operator fees need to be considered and implemented.
+- Auditing of balances needs to be done more thoroughly.
+- Ensure DB entries and wallet information is deleted after each round.
+  - Implement scrubbing and other extreme deletion measures.
+- Add a front end web browser interface with QR codes for easy scanning by smart phone apps.
 
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)

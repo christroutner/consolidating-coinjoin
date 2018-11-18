@@ -2,12 +2,12 @@
   Contains mocks of BITBOX library calls.
 */
 
-"use strict"
+'use strict'
 
-const sinon = require("sinon")
+const sinon = require('sinon')
 
 // Inspect JS Objects.
-const util = require("util")
+const util = require('util')
 util.inspect.defaultOptions = {
   showHidden: true,
   colors: true
@@ -26,8 +26,8 @@ const addressDetails = [
     unconfirmedTxApperances: 0,
     txApperances: 0,
     transactions: [],
-    legacyAddress: "mv9wPCHx2iCdbXBkJ1UTAZCAq57PCL2YQ9",
-    cashAddress: "bchtest:qzsfqeqtdk6plsvglccadkqtf0trf2nyz58090e6tt",
+    legacyAddress: 'mv9wPCHx2iCdbXBkJ1UTAZCAq57PCL2YQ9',
+    cashAddress: 'bchtest:qzsfqeqtdk6plsvglccadkqtf0trf2nyz58090e6tt',
     addressIndex: 0
   },
   {
@@ -42,11 +42,11 @@ const addressDetails = [
     unconfirmedTxApperances: 0,
     txApperances: 2,
     transactions: [
-      "26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b",
-      "85ddb8215fc3701a493cf1c450644c5ef32c55aaa2f48ae2d008944394f3e4d3"
+      '26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b',
+      '85ddb8215fc3701a493cf1c450644c5ef32c55aaa2f48ae2d008944394f3e4d3'
     ],
-    legacyAddress: "n3A9BmjrEG3ubJeoAJGwjkymhmqZhGbZR2",
-    cashAddress: "bchtest:qrkkx8au5lxsu2hka2c4ecn3juxjpcuz05wh08hhl2",
+    legacyAddress: 'n3A9BmjrEG3ubJeoAJGwjkymhmqZhGbZR2',
+    cashAddress: 'bchtest:qrkkx8au5lxsu2hka2c4ecn3juxjpcuz05wh08hhl2',
     addressIndex: 1
   },
   {
@@ -61,10 +61,10 @@ const addressDetails = [
     unconfirmedTxApperances: 0,
     txApperances: 1,
     transactions: [
-      "26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b"
+      '26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b'
     ],
-    legacyAddress: "msnHMfK2pwaBWdE7a7y4f7atdzYahRM7t8",
-    cashAddress: "bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8fm",
+    legacyAddress: 'msnHMfK2pwaBWdE7a7y4f7atdzYahRM7t8',
+    cashAddress: 'bchtest:qzrg022p8ykc90c27gy808pmz3lzlwk6lg77y3h8fm',
     addressIndex: 2
   },
   {
@@ -79,10 +79,10 @@ const addressDetails = [
     unconfirmedTxApperances: 0,
     txApperances: 1,
     transactions: [
-      "26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b"
+      '26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b'
     ],
-    legacyAddress: "mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz",
-    cashAddress: "bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3",
+    legacyAddress: 'mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz',
+    cashAddress: 'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3',
     addressIndex: 3
   }
 ]
@@ -90,34 +90,94 @@ const addressDetails = [
 const utxos = [
   [
     {
-      txid: "26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b",
+      txid: '26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b',
       vout: 1,
-      scriptPubKey: "76a9142b0379444f2e01905b2dd511644af4f53556edeb88ac",
+      scriptPubKey: '76a9142b0379444f2e01905b2dd511644af4f53556edeb88ac',
       amount: 0.06999752,
       satoshis: 6999752,
       height: 1265272,
       confirmations: 644,
-      legacyAddress: "mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz",
-      cashAddress: "bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3",
+      legacyAddress: 'mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz',
+      cashAddress: 'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3',
       hdIndex: 3
     },
     {
-      txid: "26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b",
+      txid: '26564508facb32a5f6893cb7bdfd2dcc264b248a1aa7dd0a572117667418ae5b',
       vout: 0,
-      scriptPubKey: "76a9148687a941392d82bf0af208779c3b147e2fbadafa88ac",
+      scriptPubKey: '76a9148687a941392d82bf0af208779c3b147e2fbadafa88ac',
       amount: 0.03,
       satoshis: 3000000,
       height: 1265272,
       confirmations: 733,
-      legacyAddress: "mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz",
-      cashAddress: "bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3",
+      legacyAddress: 'mjSPWfCwCgHZC27nS8GQ4AXz9ehhb2GFqz',
+      cashAddress: 'bchtest:qq4sx72yfuhqryzm9h23zez27n6n24hdavvfqn2ma3',
       hdIndex: 2
     }
   ]
 ]
 
+const mockTransactionDetails = {
+  'txid': 'a77d6afcfce99b7b5eb7a503a31d6550ac2ae445d863d5cb32c5065edd73d280',
+  'version': 2,
+  'locktime': 0,
+  'vin': [
+    {
+      'txid': '986e02d40ef13709b00f66cf2ba0a84b3ec76d63b06625b555abd21788f33a25',
+      'vout': 0,
+      'sequence': 4294967295,
+      'n': 0,
+      'scriptSig': {
+        'hex': '47304402200c204b9203c3c735f00ec90c4efc47a4da02ae1c1d12b5751fc1a392776f928402206be4edff5c8e5b1ba143ec97bc668cbc71923dd31c97f9b8b83557992bb1475a412103ba8ae11bbdd1e5adfdf79b8a648f58adab015d13247b7dba9158bb37d106e978',
+        'asm': '304402200c204b9203c3c735f00ec90c4efc47a4da02ae1c1d12b5751fc1a392776f928402206be4edff5c8e5b1ba143ec97bc668cbc71923dd31c97f9b8b83557992bb1475a[ALL|FORKID] 03ba8ae11bbdd1e5adfdf79b8a648f58adab015d13247b7dba9158bb37d106e978'
+      },
+      'value': 10653258,
+      'legacyAddress': 'mmnuoTQcickc7zvP45zmAm73cXyvjSSLcF',
+      'cashAddress': 'bchtest:qpzd24pcgf867x6cr3ulk0w3vqppvp2lactqdj804g'
+    }
+  ],
+  'vout': [
+    {
+      'value': '0.05600000',
+      'n': 0,
+      'scriptPubKey': {
+        'hex': '76a914d0022bdc9dec08850b3cb9f5f0861df982729f3c88ac',
+        'asm': 'OP_DUP OP_HASH160 d0022bdc9dec08850b3cb9f5f0861df982729f3c OP_EQUALVERIFY OP_CHECKSIG',
+        'addresses': [
+          'mzUoSpce4H6saKwPhw4Lqj3heWn4frEW9x'
+        ],
+        'type': 'pubkeyhash'
+      },
+      'spentTxId': null,
+      'spentIndex': null,
+      'spentHeight': null
+    },
+    {
+      'value': '0.05053010',
+      'n': 1,
+      'scriptPubKey': {
+        'hex': '76a914a0ae440018ce1c2989a949c8776bdef7d1467b0588ac',
+        'asm': 'OP_DUP OP_HASH160 a0ae440018ce1c2989a949c8776bdef7d1467b05 OP_EQUALVERIFY OP_CHECKSIG',
+        'addresses': [
+          'mvAZAwBDGmm9ycxq82NCYApyvH6WoYwJPh'
+        ],
+        'type': 'pubkeyhash'
+      },
+      'spentTxId': null,
+      'spentIndex': null,
+      'spentHeight': null
+    }
+  ],
+  'blockheight': 1268188,
+  'confirmations': 1,
+  'time': 1542495953,
+  'valueOut': 0.1065301,
+  'size': 225,
+  'valueIn': 0.10653258,
+  'fees': 0.00000248
+}
+
 class mockTransactionBuilder {
-  constructor() {
+  constructor () {
     this.hashTypes = {
       SIGHASH_ALL: 0x01,
       SIGHASH_NONE: 0x02,
@@ -128,28 +188,28 @@ class mockTransactionBuilder {
       ADVANCED_TRANSACTION_FLAG: 0x01
     }
 
-    this.transaction = new mockTxBuilder()
+    this.transaction = new MockTxBuilder()
   }
-  addInput() {
+  addInput () {
     sinon.stub().returns({})
   }
-  addOutput() {
+  addOutput () {
     sinon.stub().returns({})
   }
-  sign() {
+  sign () {
     sinon.stub().returns({})
   }
-  build() {
-    return new mockTxBuilder()
+  build () {
+    return new MockTxBuilder()
   }
 }
 
-class mockTxBuilder {
-  constructor() {}
-  toHex() {
-    return "mockTXHex"
+class MockTxBuilder {
+  constructor () {}
+  toHex () {
+    return 'mockTXHex'
   }
-  build() {
+  build () {
     return this.toHex
   }
 }
@@ -178,6 +238,9 @@ const bitboxMock = {
   },
   RawTransactions: {
     sendRawTransaction: sinon.stub().returns(`mockTXID`)
+  },
+  Transaction: {
+    details: sinon.stub().returns(mockTransactionDetails)
   }
 }
 

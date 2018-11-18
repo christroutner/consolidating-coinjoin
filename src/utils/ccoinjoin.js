@@ -6,6 +6,7 @@
 'use strict'
 
 const Participant = require('../models/participant')
+const wlogger = require(`./logging`)
 
 // Wallet functionality
 const SendAll = require('bch-cli-wallet/src/commands/send-all')
@@ -24,8 +25,11 @@ module.exports = {
 // This is the 'TX N+1' part of a Consolidating CoinJoin.
 async function consolidateUTXOs (walletInfo, BITBOX) {
   try {
+    wlogger.debug(`entering consolidateUTXOs()`)
+
     // Get all UTXOs controlled by this wallet.
     const utxos = await appUtil.getUTXOs(walletInfo, BITBOX)
+    // console.log(`utxos: ${util.inspect(utxos)}`)
 
     // Consolidate all UTXOs in the wallet to a single UTXO in the root address.
     const sendAll = new SendAll()
@@ -33,6 +37,7 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
 
     return txid
   } catch (err) {
+    wlogger.error(`Error in ccoinjoin.js/consolidateUTXOS(): ${util.inspect(err)}`)
     console.log(`Error in ccoinjoin.js/consolidateUTXOS()`)
     throw err
   }
@@ -42,7 +47,9 @@ async function consolidateUTXOs (walletInfo, BITBOX) {
 // executing 'TX N+2'
 async function getParticipantOutputs (round) {
   try {
-    console.log(`Getting participants for round ${round}.`)
+    wlogger.debug(`getParticipantOutputs()`)
+
+    wlogger.info(`Getting participants for round ${round}.`)
     const coinjoinoutSat = Number(process.env.COINJOINOUT) * 100000000
 
     if (!coinjoinoutSat || coinjoinoutSat <= 0) throw new Error(`COINJOINOUT env var not set`)
@@ -57,7 +64,7 @@ async function getParticipantOutputs (round) {
 
     // Retrieve all participants in the database.
     const participants = await Participant.find({})
-    console.log(`${participants.length} participants in round ${round}`)
+    wlogger.info(`${participants.length} participants in round ${round}`)
     // console.log(`participants: ${JSON.stringify(participants, null, 2)}`)
 
     const outputAddrs = []
@@ -114,6 +121,7 @@ async function getParticipantOutputs (round) {
 
     return outputAddrs
   } catch (err) {
+    wlogger.error(`Error in ccoinjoin.js/getParticipantOutputs(): ${util.inspect(err)}`)
     console.log(`Error in ccoinjoin.js/getParticipantOutputs()`)
     throw err
   }
@@ -123,6 +131,8 @@ async function getParticipantOutputs (round) {
 // This is 'TX N+2'
 async function distributeFunds (walletInfo, BITBOX, outAddrs) {
   try {
+    wlogger.debug(`distributeFunds()`)
+
     const mnemonic = walletInfo.mnemonic
 
     // root seed buffer
@@ -158,11 +168,11 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
 
     let originalAmount = utxo.satoshis
 
-    console.log(`Distributing ${originalAmount} BCH to ${outAddrs.length} addresses.`)
+    wlogger.debug(`Distributing ${originalAmount} BCH to ${outAddrs.length} addresses.`)
 
     // original amount of satoshis in vin
     // const originalAmount = inputs.length * dust
-    console.log(`originalAmount: ${originalAmount}`)
+    wlogger.debug(`originalAmount: ${originalAmount}`)
 
     // get byte count to calculate fee. paying 1 sat/byte
     const byteCount = BITBOX.BitcoinCash.getByteCount(
@@ -170,11 +180,11 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
       { P2PKH: outAddrs.length }
     )
     const fee = Math.ceil(byteCount * 1.1)
-    console.log(`fee: ${fee}`)
+    wlogger.debug(`fee: ${fee}`)
 
     // amount to send to receiver. It's the original amount - 1 sat/byte for tx size
     const sendAmount = originalAmount - fee
-    console.log(`sendAmount: ${sendAmount}`)
+    wlogger.debug(`sendAmount: ${sendAmount}`)
 
     // Loop through the output addresses
     for (var i = 0; i < outAddrs.length; i++) {
@@ -216,6 +226,7 @@ async function distributeFunds (walletInfo, BITBOX, outAddrs) {
 
     // return broadcast
   } catch (err) {
+    wlogger.error(`Error in ccoinjoin.js/distributeFunds(): ${util.inspect(err)}`)
     console.log(`Error in ccoinjoin.js/distributeFunds()`)
     throw err
   }

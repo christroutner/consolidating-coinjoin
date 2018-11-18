@@ -8,7 +8,10 @@ const passport = require('koa-passport')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
-const checkBalance = require('../src/utils/check-balance')
+const cCoinJoinUtils = require('../src/utils/ccoinjoin-utils')
+
+// Winston logger
+const wlogger = require('../src/utils/logging')
 
 // Wallet functionality
 const CreateWallet = require('bch-cli-wallet/src/commands/create-wallet')
@@ -17,7 +20,11 @@ const UpdateBalance = require('bch-cli-wallet/src/commands/update-balances')
 const config = require('../config')
 const errorMiddleware = require('../src/middleware')
 
+// SERVER CONFIGURATION
 const CHECK_BALANCE_PERIOD = 1000 * 60 * 2 // 2 minutes
+process.env.FILENAME = `${__dirname}/../wallets/wallet.json`
+process.env.ACTIVE_WALLET = `${__dirname}/../wallets/active-wallet.json`
+process.env.THRESHOLD = 0.1 // for triggering a CoinJoin round.
 
 // Determine the network. Testnet by default.
 if (!process.env.NETWORK) process.env.NETWORK = `testnet`
@@ -92,11 +99,12 @@ async function startServer () {
   // })
   await app.listen(config.port)
   console.log(`Server started on ${config.port}`)
+  wlogger.info(`Server started on ${config.port}`)
 
   // Periodically check the balance of server's wallet
   setInterval(function () {
     const updateBalance = new UpdateBalance()
-    checkBalance.checkBalance(BITBOX, updateBalance)
+    cCoinJoinUtils.checkBalance(BITBOX, updateBalance)
   }, CHECK_BALANCE_PERIOD)
 
   return app
