@@ -31,35 +31,27 @@ RUN echo "export PATH=~/.npm-global/bin:$PATH" >> /home/coinjoin/.profile
 RUN runuser -l coinjoin -c "npm config set prefix '~/.npm-global'"
 
 # Expose the port the API will be served on.
-EXPOSE 3000
+EXPOSE 5000
 
 
 # Switch to user account.
-USER rest
+USER coinjoin
 # Prep 'sudo' commands.
 RUN echo 'password' | sudo -S pwd
 
 # Clone the rest.bitcoin.com repository
-WORKDIR /home/rest
-RUN git clone https://github.com/Bitcoin-com/rest.bitcoin.com
+WORKDIR /home/coinjoin
+RUN git clone https://github.com/christroutner/consolidating-coinjoin
 
 # Switch to the desired branch. `master` is usually stable,
 # and `stage` has the most up-to-date changes.
-WORKDIR /home/rest/rest.bitcoin.com
-RUN git checkout stage
-# EDIT THE LINE ABOVE TO REFLECT THE BRANCH YOU WANT TO USE
+WORKDIR /home/coinjoin/consolidating-coinjoin
 
 # Install dependencies
 RUN npm install
 
-# Copy the config file.
-# EDIT THESE LINES TO REFLECT THE CONFIG FILE YOU WANT TO USE
-#COPY config/start-mainnet /home/rest/rest.bitcoin.com/start-mainnet
-#RUN sudo chmod 775 /home/rest/rest.bitcoin.com/start-mainnet
-COPY config/start-testnet /home/rest/rest.bitcoin.com/start-testnet
-#RUN sudo chmod 775 /home/rest/rest.bitcoin.com/start-testnet
+# Start the application.
+COPY start-production start-production
+CMD ["./start-production"]
 
-
-# Startup bitcore, insight, and the full node.
-#CMD ["/home/rest/rest.bitcoin.com/start-mainnet"]
-CMD ["/home/rest/rest.bitcoin.com/start-testnet"]
+#CMD ["npm", "start"]

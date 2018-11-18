@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t rest.bitcoin.com .
+docker build -t ccoinjoin .

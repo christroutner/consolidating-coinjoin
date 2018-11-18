@@ -61,3 +61,4 @@ docs
 coverage
 wallets/*.json
 logs/
+database/
