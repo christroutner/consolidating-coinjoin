@@ -48,7 +48,7 @@
     "koa-static": "^5.0.0",
     "mongoose": "^5.3.12",
     "passport-local": "^1.0.0",
-    "request": "^2.85.0",
+    "request": "^2.88.2",
     "request-promise": "^4.2.2",
     "winston": "^3.1.0",
     "winston-daily-rotate-file": "^3.5.1"
